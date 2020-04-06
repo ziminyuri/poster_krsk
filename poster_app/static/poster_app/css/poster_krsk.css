@@ -1,0 +1,8 @@
+.auth_label {
+    text-align: center;
+    color: #6c757d;
+}
+
+.error_auth_label{
+    color: darkred;
+}
