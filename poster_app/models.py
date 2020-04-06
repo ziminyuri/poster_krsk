@@ -15,6 +15,9 @@ class UserProfile(models.Model):
     class Meta:
         db_table = 'user_profile'
 
+    def __str__(self):
+        return self.surname + " " + self.name
+
 
 class TypeEvent(models.Model):
     ID_type_event = models.AutoField(primary_key=True)
@@ -23,21 +26,27 @@ class TypeEvent(models.Model):
     class Meta:
         db_table = 'type_event'
 
+    def __str__(self):
+        return self.name
+
 
 class Event(models.Model):
     ID_event = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    address = models.CharField(max_length=100)
+    address = models.CharField(max_length=100, null=True, blank=True)
     description = models.CharField(max_length=255)
-    img_path = models.CharField(max_length=255)
-    phone = models.CharField(max_length=15)
-    data_time = models.DateTimeField()
-    ticket_price = models.CharField(max_length=15)
-    number_of_tickets = models.CharField(max_length=7)
+    img_path = models.CharField(max_length=255, null=True, blank=True)
+    phone = models.CharField(max_length=15, null=True, blank=True)
+    data_time_begin = models.DateTimeField(null=True, blank=True)
+    data_time_end = models.DateTimeField(null=True, blank=True)
+    ticket_price = models.CharField(max_length=15, null=True, blank=True)
+    number_of_tickets = models.CharField(max_length=7, null=True, blank=True)
     ID_type_event = models.ForeignKey(TypeEvent, models.DO_NOTHING)
     ID_user_profile = models.ForeignKey(UserProfile, models.DO_NOTHING)
 
     class Meta:
         db_table = 'event'
 
+    def __str__(self):
+        return self.name
 

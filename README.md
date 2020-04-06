@@ -4,5 +4,10 @@
 Quick Start
 ./manage.py migrate
 python manage.py startapp poster_app
+python manage.py createsuperuser
+
+Login Information
+Superuser: sfu
+Password: red666
 
 
