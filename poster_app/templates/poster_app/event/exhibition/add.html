@@ -1,10 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "poster_app/user/base.html" %}
+{% block content %}
 
-</body>
-</html>
+<form action="{% url 'exhibition'  %}" method="POST">
+          <div class="form-group">
+          <input type="hidden" required class="form-control" name="_method" value = "POST">
+
+          <label>Название</label>
+              <input type="text" required class="form-control" name="name">
+
+          <label>Описание</label>
+              <input type="text" required class="form-control" name="description" id="description">
+
+          <label>Адрес</label>
+              <input type="text" required class="form-control" name="address" id="address">
+
+            <label>Статус</label>
+                            <select id="RequestType" class="form-control" name="id_status" id="id_status">
+                                {% for status in statuss %}
+                                    <option selected value= "{{ status.Id_Status }}">
+                                        {{ status.NameStatus }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                            <label>Дата заключения</label>
+                            <input type="date" required class="form-control" name="id_date" id="id_date">
+
+                            <label>Дата окончания</label>
+                            <input type="date" required class="form-control" name="id_date_end" id="id_date_end">
+
+
+
+
+
+                            <label>Клиент</label>
+                            <select id="RequestType" class="form-control" name="id_customer" id="id_customer">
+                                {% for customer in customres %}
+                                    <option selected value= "{{ customer.Id_customer }}">
+                                        {{ customer.FIO }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                            <label>Производитель</label>
+                            <select id="RequestType" class="form-control" name="id_creator" id="id_creator">
+                                {% for creator in creators %}
+                                    <option selected value= "{{ creator.Id_creator }}">
+                                        {{ creator.Name_creator }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                            <label>Вид устройства</label>
+                            <select id="RequestType" class="form-control" name="id_kind" id="id_kind">
+                                {% for kinddevice in kinddevices %}
+                                    <option selected value= "{{ kinddevice.Id_KindDevice }}">
+                                        {{ kinddevice.NameDevice }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                            <label>Модель</label>
+                            <input type="text" required class="form-control" name="id_model" id="id_model">
+
+                            <label>Серийный номер</label>
+                            <input type="text" required class="form-control" name="id_imei" id="id_imei">
+
+                            <label>Вид услуги</label>
+                            <select id="RequestType" class="form-control" name="id_service" id="id_service">
+                                {% for service in services %}
+                                    <option selected value= "{{ service.IdService }}">
+                                        {{ service.Id_service.Name_work }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                            <label>Запчасть</label>
+                            <select id="RequestType" class="form-control" name="id_detail" id="id_detail">
+                                {% for detail in details %}
+                                    <option selected value= "{{ detail.Id_Detail }}">
+                                        {{ detail.Id_KindDetail.Name_Detail }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                            <label>Мастер</label>
+                            <select id="RequestType" class="form-control" name="id_master" id="id_master">
+                                {% for master in masters %}
+                                    <option selected value= "{{ master.Id_Master }}">
+                                        {{ master.FIO }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+
+          </div>
+          <div class="form-group">
+            <button class="btn btn-primary" type="submit">Добавить</button>
+          </div>
+        </form>
+
+{% endblock %}

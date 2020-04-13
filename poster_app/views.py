@@ -39,16 +39,15 @@ def events(request):
     if request.method == 'POST':
         data = request.POST
 
-        request.session['event'] = data
         event_type = data['event_type']
 
-        if event_type == "Выставки":
-            return redirect('exhibition')
+        if event_type == "Выставка":
+            return redirect('exhibition_add')
         elif event_type == 'Театр':
             return redirect('theater')
-        elif event_type == "Концерты":
+        elif event_type == "Концерт":
             return redirect('concert')
-        elif event_type == "Конференции":
+        elif event_type == "Конференция":
             return redirect('conference')
 
     events_list = Event.objects.all()
@@ -75,12 +74,12 @@ def conference(request):
 
 def exhibition(request):
     print('Выставка')
-
-    event_data = request.session.get('event')
-    if event_data['_method'] == "POST":
-        print('Добавиление')
-
     return render(request, 'poster_app/event/exhibition/detail.html')
+
+
+def exhibition_add(request):
+    return render(request, 'poster_app/event/exhibition/add.html')
+
 
 
 def theater(request):
