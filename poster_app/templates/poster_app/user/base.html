@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Афиша Красноярска</title>
+
+    {% load static %}
+    <link href="{% static 'poster_app/css/album.css'%}" rel="stylesheet">
+    <link href="{% static 'poster_app/css/carousel.css'%}" rel="stylesheet">
+    <link href="{% static 'poster_app/css/poster_krsk.css'%}" rel="stylesheet">
+    <link href="{% static 'poster_app/css/bootstrap.min.css' %}" rel="stylesheet"  type="text/css" />
+
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-body">
+
+        <form role="form" action="{% url 'auth_user' %}" method="POST" id="auth_block">
+            {% csrf_token %}
+<h1 class="h5 mb-3 font-weight-normal">Войти в личный кабинет</h1>
+    <label for="inputUsername" class="sr-only">Имя пользователя</label>
+    <input type="text" id="inputUsername" class="form-control" placeholder="Имя пользователя" required autofocus
+           name="username">
+    <label for="inputPassword" class="sr-only">Пароль</label>
+    <input type="password" id="inputPassword" class="form-control mt-3 mb-3" placeholder="Пароль" required name="password">
+    <p class="error_auth_label mt-3 mb-3"></p>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
+             <p class="mt-3 mb-3 auth_label">или</p>
+            <button class="btn btn-outline-primary btn-block" >Регистрация</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<header>
+
+
+
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="#">Афиша Красноярска</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Профиль</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Мероприятия</a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link" href="#">Бронирования</a>
+          </li>
+      </ul>
+        <ul class="navbar-nav mr-2">
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Привет, Иван!
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="#">Выйти</a>
+        </div>
+      </li>
+        </ul>
+    </div>
+  </nav>
+
+</header>
+{% block content %}
+
+{% endblock %}
+<footer class="text-muted">
+  <div class="container">
+    <p class="float-right">
+      <a href="#">Back to top</a>
+    </p>
+    <p>Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="{% static 'poster_app/js/auth.js' %}"></script>
+</body>
+</html>
