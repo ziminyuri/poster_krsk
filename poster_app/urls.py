@@ -12,8 +12,11 @@ urlpatterns = [
 
     path('concert', views.concert, name='concert'),
     path('conference', views.conference, name='conference'),
+
     path('exhibition', views.exhibition, name='exhibition'),
     path('exhibition/add', views.exhibition_add, name='exhibition_add'),
+    path('exhibition/update/<int:id>', views.exhibition_update, name='exhibition_update'),
+
     path('theater', views.theater, name='theater'),
 
 

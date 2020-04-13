@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.contrib import auth
 import json
@@ -39,16 +39,36 @@ def events(request):
     if request.method == 'POST':
         data = request.POST
 
-        event_type = data['event_type']
+        if data['_method'] == "POST":
+            event_type = data['event_type']
 
-        if event_type == "Выставка":
-            return redirect('exhibition_add')
-        elif event_type == 'Театр':
-            return redirect('theater')
-        elif event_type == "Концерт":
-            return redirect('concert')
-        elif event_type == "Конференция":
-            return redirect('conference')
+            if event_type == "Выставка":
+                return redirect('exhibition_add')
+            elif event_type == 'Театр':
+                return redirect('theater')
+            elif event_type == "Концерт":
+                return redirect('concert')
+            elif event_type == "Конференция":
+                return redirect('conference')
+
+        elif data['_method'] == "UPDATE":
+            event_type = data['event_type']
+            event_id = int(data['event'])
+
+            if event_type == "Выставка":
+                return redirect('exhibition_update', event_id)
+            elif event_type == 'Театр':
+                return redirect('theater')
+            elif event_type == "Концерт":
+                return redirect('concert')
+            elif event_type == "Конференция":
+                return redirect('conference')
+
+        elif data['_method'] == "DELETE":
+            event = data['event']
+            event_obj = Event.objects.get(ID_event=event)
+            event_obj.delete()
+            return redirect('events')
 
     events_list = Event.objects.all()
     event_types = TypeEvent.objects.all()
@@ -73,12 +93,37 @@ def conference(request):
 
 
 def exhibition(request):
-    print('Выставка')
+    if request.method == 'POST':
+        data = request.POST
+
+        if data['_method'] == 'POST':
+            type_event = get_object_or_404(TypeEvent, name="Выставка")
+            name = data['name']
+            description = data['description']
+            address = data['address']
+            exhibition_type = get_object_or_404(TypeExhibition, id_type_exhibition=data['exhibition_type'])
+            time_begin = data['time_begin']
+            time_end = data['time_end']
+            # isfree = data['free']
+            price = data['price']
+            user = get_object_or_404(UserProfile, user=request.user)
+            Event.objects.create(name=name, address=address, description=description, time_begin=time_begin,
+                                 time_end=time_end, ticket_price=price, id_type_exhibition=exhibition_type,
+                                 ID_type_event=type_event, ID_user_profile=user)
+
+            return redirect('events')
+
     return render(request, 'poster_app/event/exhibition/detail.html')
 
 
 def exhibition_add(request):
-    return render(request, 'poster_app/event/exhibition/add.html')
+    exhibition_types = TypeExhibition.objects.all()
+    return render(request, 'poster_app/event/exhibition/add.html', {'exhibition_types': exhibition_types,})
+
+
+def exhibition_update(request, id):
+    exhibition_types = TypeExhibition.objects.all()
+    return render(request, 'poster_app/event/exhibition/update.html', {'exhibition_types': exhibition_types,})
 
 
 

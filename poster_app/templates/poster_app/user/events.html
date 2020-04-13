@@ -21,7 +21,7 @@
                       </option>
                   {% endfor %}
               </select>
-
+                <br>
               <button class="btn btn-primary btn-block" type="submit">Добавить</button>
 
           </form>
@@ -60,8 +60,23 @@
                     <td>{{ event.ID_type_event.name }}</td>
                     <td>{{ event.data_time_begin }} - {{ event.data_time_end }}</td>
                     <td>Подробнее</td>
-                    <td>Редактировать</td>
-                    <td>Удалить</td>
+                    <td>
+                        <form action="{% url 'events' %}" method="POST">
+                            {% csrf_token %}
+                                    <input type="hidden" required class="form-control" name="_method" value = "UPDATE">
+                                    <input type="hidden" required class="form-control" name="event" value = "{{ event.ID_event}}">
+                                    <input type="hidden" required class="form-control" name="event_type" value = "{{ event.ID_type_event.name}}">
+                                    <input type="submit" class="btn btn-outline-danger btn-sm" value="Редактировать" >
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{% url 'events' %}" method="POST">
+                            {% csrf_token %}
+                                    <input type="hidden" required class="form-control" name="_method" value = "DELETE">
+                                    <input type="hidden" required class="form-control" name="event" value = "{{ event.ID_event}}">
+                                    <input type="submit" class="btn btn-outline-danger btn-sm" value="Удалить" >
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
