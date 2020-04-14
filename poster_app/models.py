@@ -42,6 +42,17 @@ class TypeExhibition(models.Model):
         return self.name
 
 
+class EventStatus(models.Model):
+    id_event_status = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'event_status'
+
+    def __str__(self):
+        return self.name
+
+
 class Event(models.Model):
     ID_event = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
@@ -57,7 +68,8 @@ class Event(models.Model):
     number_of_tickets = models.CharField(max_length=7, null=True, blank=True)
     ID_type_event = models.ForeignKey(TypeEvent, models.DO_NOTHING)
     ID_user_profile = models.ForeignKey(UserProfile, models.DO_NOTHING)
-    id_type_exhibition = models.ForeignKey(TypeExhibition, models.DO_NOTHING, blank=True)
+    id_type_exhibition = models.ForeignKey(TypeExhibition, models.DO_NOTHING, blank=True, null=True)
+    id_event_status = models.ForeignKey(EventStatus, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         db_table = 'event'

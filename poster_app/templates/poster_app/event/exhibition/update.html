@@ -11,24 +11,26 @@
     <div class="col">
     </div>
 <div class="col-6">
-        <form action="{% url 'exhibition'  %}" method="POST">
+        <form action="{% url 'exhibition_update' event_id=event.ID_event%}" method="POST">
             {% csrf_token %}
           <div class="form-group">
-          <input type="hidden" required class="form-control" name="_method" value = "UPDATE">
+          <input type="hidden" required class="form-control" name="_method" value = "PUT">
 
           <label>Название</label>
           <br>
-          <input type="text" required class="form-control" name="name">
+          <input type="text" required class="form-control" name="name" value = "{{ event.name }}">
           <br>
 
           <label>Описание</label>
           <br>
-          <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name="description"></textarea>
+          <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name="description">
+              {{ event.description }}
+          </textarea>
           <br>
 
           <label>Адрес</label>
           <br>
-          <input type="text" required class="form-control" name="address" id="address">
+          <input type="text" required class="form-control" name="address" value = "{{ event.address }}">
           <br>
 
             <label>Тип выставки</label>
@@ -44,22 +46,24 @@
 
           <label>Время начала</label>
           <br>
-          <input type="time" class="form-control" name="time_begin" min="08:00" max="24:00" required>
+          <input type="time" class="form-control" name="time_begin" min="08:00" max="24:00" required
+                 value = "{{ event.time_begin }}">
           <br>
           <label>Время окончания</label>
           <br>
-          <input type="time" class="form-control" name="time_end" min="08:00" max="24:00" required>
+          <input type="time" class="form-control" name="time_end" min="08:00" max="24:00" required
+          value = "{{ event.time_end }}">
           <br>
           <label>Стоимость билета</label>
           <br>
           <input type="checkbox" name="free" value="0" class="mr-2 mb-2">Бесплатно<br>
-          <input type="text" required class="form-control" name="price" id="price">
+          <input type="text" required class="form-control" name="price" id="price" value = "{{ event.ticket_price }}">
           <br>
              <label for="exampleFormControlFile1">Прикрепить изображение</label>
                   <input type="file" class="form-control-file" id="exampleFormControlFile1">
           </div>
           <div class="form-group">
-            <button class="btn btn-primary" type="submit">Добавить</button>
+            <button class="btn btn-primary" type="submit">Сохранить</button>
           </div>
         </form>
     </div>

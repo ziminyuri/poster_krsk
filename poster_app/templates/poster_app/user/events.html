@@ -59,14 +59,17 @@
                     <td>{{ event.name }}</td>
                     <td>{{ event.ID_type_event.name }}</td>
                     <td>{{ event.data_time_begin }} - {{ event.data_time_end }}</td>
-                    <td>Подробнее</td>
+                    <td>
+                        <a class="btn btn-outline-secondary btn-sm" href="{% url 'event_detail' event_id=event.ID_event  %}">
+                        Подробнее</a>
+                    </td>
                     <td>
                         <form action="{% url 'events' %}" method="POST">
                             {% csrf_token %}
-                                    <input type="hidden" required class="form-control" name="_method" value = "UPDATE">
+                                    <input type="hidden" required class="form-control" name="_method" value = "PUT">
                                     <input type="hidden" required class="form-control" name="event" value = "{{ event.ID_event}}">
                                     <input type="hidden" required class="form-control" name="event_type" value = "{{ event.ID_type_event.name}}">
-                                    <input type="submit" class="btn btn-outline-danger btn-sm" value="Редактировать" >
+                                    <input type="submit" class="btn btn-outline-secondary btn-sm" value="Редактировать" >
                         </form>
                     </td>
                     <td>
