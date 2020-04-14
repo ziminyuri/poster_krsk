@@ -62,13 +62,13 @@ def events(request):
                                                                                    'event': event})
 
             elif event_type == 'Театр':
-                return redirect('theater')
+                return render(request, 'poster_app/event/theater/update.html', {'event': event})
 
             elif event_type == "Концерт":
                 return render(request, 'poster_app/event/concert/update.html', {'event': event})
 
             elif event_type == "Конференция":
-                return redirect('conference')
+                return render(request, 'poster_app/event/conference/update.html', {'event': event})
 
         elif data['_method'] == "DELETE":
             event = data['event']
@@ -149,11 +149,54 @@ def concert_update_detail(request, event_id: int):
 
 
 def conference(request):
+    if request.method == 'POST':
+        data = request.POST
+
+        if data['_method'] == 'POST':
+            type_event = get_object_or_404(TypeEvent, name="Конференция")
+            name = data['name']
+            description = data['description']
+            address = data['address']
+            date_begin = data['date_begin']
+            date_end = data['date_end']
+            time_begin = data['time_begin']
+            time_end = data['time_end']
+            # isfree = data['free']
+            price = data['price']
+            user = get_object_or_404(UserProfile, user=request.user)
+            Event.objects.create(name=name, address=address, description=description, time_begin=time_begin,
+                                 time_end=time_end, ticket_price=price,
+                                 ID_type_event=type_event, ID_user_profile=user, data_begin=date_begin,
+                                 data_end=date_end)
+
+            return redirect('events')
+
     return render(request, 'poster_app/event/conference/add.html')
 
 
 def conference_update_detail(request, event_id: int):
-    return render(request, 'poster_app/event/conference/update.html')
+    if request.method == 'POST':
+        data = request.POST
+
+        if data['_method'] == 'PUT':
+            name = data['name']
+            description = data['description']
+            address = data['address']
+            time_begin = data['time_begin']
+            time_end = data['time_end']
+            # isfree = data['free']
+            price = data['price']
+            date_begin = data['date_begin']
+            date_end = data['date_end']
+            Event.objects.filter(ID_event=event_id).update(name=name, description=description, address=address,
+                                                           time_begin=time_begin,
+                                                           time_end=time_end, ticket_price=price, data_begin=date_begin,
+                                 data_end=date_end)
+
+            return redirect(events)
+
+    event = get_object_or_404(Event, ID_event=event_id)
+    return render(request, 'poster_app/event/conference/detail.html', {'event': event})
 
 
 def exhibition(request):
@@ -206,11 +249,46 @@ def exhibition_update_detail(request, event_id: int):
 
 
 def theater(request):
+    if request.method == 'POST':
+        data = request.POST
+
+        if data['_method'] == 'POST':
+            type_event = get_object_or_404(TypeEvent, name="Театр")
+            name = data['name']
+            description = data['description']
+            address = data['address']
+            time_begin = data['time_begin']
+            date = data['date']
+            # isfree = data['free']
+            price = data['price']
+            user = get_object_or_404(UserProfile, user=request.user)
+            Event.objects.create(name=name, address=address, description=description, time_begin=time_begin,
+                                 data_begin=date, ticket_price=price, ID_type_event=type_event, ID_user_profile=user)
+
+            return redirect('events')
+
     return render(request, 'poster_app/event/theater/add.html')
 
 
 def theater_update_detail(request, event_id: int):
-    return render(request, 'poster_app/event/theater/update.html')
+    if request.method == 'POST':
+        data = request.POST
+
+        if data['_method'] == 'PUT':
+            name = data['name']
+            description = data['description']
+            address = data['address']
+            time_begin = data['time_begin']
+            date = data['date']
+            # isfree = data['free']
+            price = data['price']
+            Event.objects.filter(ID_event=event_id).update(name=name, description=description, address=address,
+                                                           time_begin=time_begin, data_begin=date,
+                                                           ticket_price=price)
+            return redirect(events)
+
+    event = get_object_or_404(Event, ID_event=event_id)
+    return render(request, 'poster_app/event/theater/detail.html', {'event': event})
 
 
 

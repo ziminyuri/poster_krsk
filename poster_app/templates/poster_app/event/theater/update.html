@@ -1,10 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "poster_app/user/base.html" %}
+{% block content %}
 
-</body>
-</html>
+    <section class="jumbotron text-center">
+    <div class="container">
+        <h1>Обновить информацию о театральной постановке</h1>
+    </div>
+  </section>
+<div class="container">
+<row>
+    <div class="col">
+    </div>
+<div class="col-6">
+        <form action="{% url 'theater_update_detail' event_id=event.ID_event %}" method="POST">
+            {% csrf_token %}
+          <div class="form-group">
+          <input type="hidden" required class="form-control" name="_method" value = "PUT">
+
+          <label>Название</label>
+          <br>
+          <input type="text" required class="form-control" name="name" value = "{{ event.name }}">
+          <br>
+
+          <label>Описание</label>
+          <br>
+          <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name="description">{{ event.description }}
+          </textarea>
+          <br>
+
+          <label>Адрес</label>
+          <br>
+          <input type="text" required class="form-control" name="address" value = "{{ event.address }}">
+          <br>
+
+          <label>Дата</label>
+          <br>
+          <input type="date" class="form-control" name="date" required value = "{{ event.data_begin }}">
+          <br>
+
+          <label>Время начала</label>
+          <br>
+          <input type="time" class="form-control" name="time_begin" min="08:00" max="24:00"
+                 required value = "{{ event.time_begin }}">
+          <br>
+
+          <label>Стоимость билета</label>
+          <br>
+          <input type="checkbox" name="free" value="0" class="mr-2 mb-2">Бесплатно<br>
+          <input type="text" required class="form-control" name="price" value = "{{ event.ticket_price }}">
+          <br>
+             <label for="exampleFormControlFile1">Прикрепить изображение</label>
+                  <input type="file" class="form-control-file" id="exampleFormControlFile1">
+          </div>
+          <div class="form-group">
+            <button class="btn btn-primary" type="submit">Добавить</button>
+          </div>
+        </form>
+    </div>
+<div class="col">
+    </div>
+</row>
+</div>
+{% endblock %}
