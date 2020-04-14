@@ -20,9 +20,9 @@ urlpatterns = [
     path('conference/<int:id>', views.conference_update, name='conference_update'),
 
     path('exhibition', views.exhibition, name='exhibition'),
-    path('exhibition/add', views.exhibition_add, name='exhibition_add'),
-    path('exhibition/<int:event_id>', views.exhibition_update, name='exhibition_update'),
-    path('exhibition/detail/<int:event_id>', views.exhibition_detail, name='exhibition_detail'),
+    # path('exhibition/add', views.exhibition_add, name='exhibition_add'),
+    path('exhibition/<int:event_id>', views.exhibition_update_detail, name='exhibition_update_detail'),
+    #path('exhibition/detail/<int:event_id>', views.exhibition_detail, name='exhibition_detail'),
 
     path('theater', views.theater, name='theater'),
     path('theater_add', views.theater_add, name='theater_add'),

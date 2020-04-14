@@ -43,24 +43,30 @@ def events(request):
             event_type = data['event_type']
 
             if event_type == "Выставка":
-                return redirect('exhibition_add')
+                return redirect('exhibition')
             elif event_type == 'Театр':
                 return redirect('theater')
             elif event_type == "Концерт":
-                return redirect('concert')
+                return redirect('concert_add')
             elif event_type == "Конференция":
                 return redirect('conference')
 
         elif data['_method'] == "PUT":
             event_type: str = data['event_type']
             event_id: int = int(data['event'])
+            event = get_object_or_404(Event, ID_event=event_id)
 
             if event_type == "Выставка":
-                return redirect('exhibition_update', event_id)
+                exhibition_types = TypeExhibition.objects.all()
+                return render(request, 'poster_app/event/exhibition/update.html', {'exhibition_types': exhibition_types,
+                                                                                   'event': event})
+
             elif event_type == 'Театр':
                 return redirect('theater')
+
             elif event_type == "Концерт":
-                return redirect('concert')
+                return render(request, 'poster_app/event/concert/update.html', {'event': event})
+
             elif event_type == "Конференция":
                 return redirect('conference')
 
@@ -81,7 +87,7 @@ def event_detail(request,  event_id: int):
     event = get_object_or_404(Event, ID_event=event_id)
 
     if event.ID_type_event.name == "Выставка":
-        return redirect('exhibition_detail', event_id=event_id)
+        return redirect('exhibition_update_detail', event_id=event_id)
 
 
 @login_required
@@ -90,6 +96,23 @@ def booking(request):
 
 
 def concert(request):
+    if request.method == 'POST':
+        data = request.POST
+
+        if data['_method'] == 'POST':
+            type_event = get_object_or_404(TypeEvent, name="Концерт")
+            name = data['name']
+            description = data['description']
+            address = data['address']
+            time_begin = data['time_begin']
+            date = data['date']
+            # isfree = data['free']
+            price = data['price']
+            user = get_object_or_404(UserProfile, user=request.user)
+            Event.objects.create(name=name, address=address, description=description, time_begin=time_begin,
+                                 data_begin=date, ticket_price=price, ID_type_event=type_event, ID_user_profile=user)
+
+            return redirect('events')
     return render(request, 'poster_app/event/concert/detail.html')
 
 
@@ -97,7 +120,8 @@ def concert_add(request):
     return render(request, 'poster_app/event/concert/add.html')
 
 
-def concert_update(request, id):
+def concert_update(request, event_id: int):
+
     return render(request, 'poster_app/event/concert/update.html')
 
 
@@ -114,6 +138,7 @@ def conference_update(request, id):
 
 
 def exhibition(request):
+
     if request.method == 'POST':
         data = request.POST
 
@@ -134,15 +159,11 @@ def exhibition(request):
 
             return redirect('events')
 
-    return render(request, 'poster_app/event/exhibition/detail.html')
-
-
-def exhibition_add(request):
     exhibition_types = TypeExhibition.objects.all()
     return render(request, 'poster_app/event/exhibition/add.html', {'exhibition_types': exhibition_types})
 
 
-def exhibition_update(request, event_id: int):
+def exhibition_update_detail(request, event_id: int):
     if request.method == 'POST':
         data = request.POST
 
@@ -161,15 +182,8 @@ def exhibition_update(request, event_id: int):
 
             return redirect(events)
 
-    exhibition_event = get_object_or_404(Event, ID_event=event_id)
-    exhibition_types = TypeExhibition.objects.all()
-    return render(request, 'poster_app/event/exhibition/update.html', {'exhibition_types': exhibition_types,
-                                                                       'event': exhibition_event})
-
-
-def exhibition_detail(request, event_id: int):
-    exhibition_event = get_object_or_404(Event, ID_event=event_id)
-    return render (request, 'poster_app/event/exhibition/detail.html', {'event': exhibition_event})
+    event = get_object_or_404(Event, ID_event=event_id)
+    return render(request, 'poster_app/event/exhibition/detail.html', {'event': event})
 
 
 def theater(request):
