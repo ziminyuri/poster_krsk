@@ -1,9 +1,3 @@
-GET /book/ — получить список всех книг
-PUT /book/ — добавить книгу (данные в теле запроса)
 
 
-GET /book/3/ — получить книгу номер 3
-POST /book/3 – изменить книгу (данные в теле запроса)
-
-DELETE /book/3 – удалить книгу
-
+ {% include icons/placeholder.svg width="100%" height="225" background="#55595c" color="#eceeef" class="card-img-top" text="Thumbnail" %}

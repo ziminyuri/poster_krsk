@@ -15,46 +15,61 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='TypeEvent',
+            name="TypeEvent",
             fields=[
-                ('ID_type_event', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=50)),
+                ("ID_type_event", models.AutoField(primary_key=True, serialize=False)),
+                ("name", models.CharField(max_length=50)),
             ],
-            options={
-                'db_table': 'type_event',
-            },
+            options={"db_table": "type_event",},
         ),
         migrations.CreateModel(
-            name='UserProfile',
+            name="UserProfile",
             fields=[
-                ('ID_user_profile', models.AutoField(primary_key=True, serialize=False)),
-                ('surname', models.CharField(max_length=50)),
-                ('name', models.CharField(max_length=50)),
-                ('email', models.CharField(max_length=50)),
-                ('phone', models.CharField(max_length=17)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "ID_user_profile",
+                    models.AutoField(primary_key=True, serialize=False),
+                ),
+                ("surname", models.CharField(max_length=50)),
+                ("name", models.CharField(max_length=50)),
+                ("email", models.CharField(max_length=50)),
+                ("phone", models.CharField(max_length=17)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
-            options={
-                'db_table': 'user_profile',
-            },
+            options={"db_table": "user_profile",},
         ),
         migrations.CreateModel(
-            name='Event',
+            name="Event",
             fields=[
-                ('ID_event', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=100)),
-                ('address', models.CharField(max_length=100)),
-                ('description', models.CharField(max_length=255)),
-                ('img_path', models.CharField(max_length=255)),
-                ('phone', models.CharField(max_length=15)),
-                ('data_time', models.DateTimeField()),
-                ('ticket_price', models.CharField(max_length=15)),
-                ('number_of_tickets', models.CharField(max_length=7)),
-                ('ID_type_event', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='poster_app.TypeEvent')),
-                ('ID_user_profile', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='poster_app.UserProfile')),
+                ("ID_event", models.AutoField(primary_key=True, serialize=False)),
+                ("name", models.CharField(max_length=100)),
+                ("address", models.CharField(max_length=100)),
+                ("description", models.CharField(max_length=255)),
+                ("img_path", models.CharField(max_length=255)),
+                ("phone", models.CharField(max_length=15)),
+                ("data_time", models.DateTimeField()),
+                ("ticket_price", models.CharField(max_length=15)),
+                ("number_of_tickets", models.CharField(max_length=7)),
+                (
+                    "ID_type_event",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="poster_app.TypeEvent",
+                    ),
+                ),
+                (
+                    "ID_user_profile",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="poster_app.UserProfile",
+                    ),
+                ),
             ],
-            options={
-                'db_table': 'event',
-            },
+            options={"db_table": "event",},
         ),
     ]

@@ -7,52 +7,52 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('poster_app', '0003_auto_20200405_1347'),
+        ("poster_app", "0003_auto_20200405_1347"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='TypeExhibition',
+            name="TypeExhibition",
             fields=[
-                ('id_type_exhibition', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=50)),
+                (
+                    "id_type_exhibition",
+                    models.AutoField(primary_key=True, serialize=False),
+                ),
+                ("name", models.CharField(max_length=50)),
             ],
-            options={
-                'db_table': 'type_exhibition',
-            },
+            options={"db_table": "type_exhibition",},
         ),
-        migrations.RemoveField(
-            model_name='event',
-            name='data_time_begin',
-        ),
-        migrations.RemoveField(
-            model_name='event',
-            name='data_time_end',
-        ),
+        migrations.RemoveField(model_name="event", name="data_time_begin",),
+        migrations.RemoveField(model_name="event", name="data_time_end",),
         migrations.AddField(
-            model_name='event',
-            name='data_begin',
+            model_name="event",
+            name="data_begin",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='event',
-            name='data_end',
+            model_name="event",
+            name="data_end",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='event',
-            name='time_begin',
+            model_name="event",
+            name="time_begin",
             field=models.TimeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='event',
-            name='time_end',
+            model_name="event",
+            name="time_end",
             field=models.TimeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='event',
-            name='id_type_exhibition',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='poster_app.TypeExhibition'),
+            model_name="event",
+            name="id_type_exhibition",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                to="poster_app.TypeExhibition",
+            ),
             preserve_default=False,
         ),
     ]

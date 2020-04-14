@@ -6,43 +6,43 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('poster_app', '0002_auto_20200405_1343'),
+        ("poster_app", "0002_auto_20200405_1343"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='event',
-            name='address',
+            model_name="event",
+            name="address",
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='data_time_begin',
+            model_name="event",
+            name="data_time_begin",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='data_time_end',
+            model_name="event",
+            name="data_time_end",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='img_path',
+            model_name="event",
+            name="img_path",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='number_of_tickets',
+            model_name="event",
+            name="number_of_tickets",
             field=models.CharField(blank=True, max_length=7, null=True),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='phone',
+            model_name="event",
+            name="phone",
             field=models.CharField(blank=True, max_length=15, null=True),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='ticket_price',
+            model_name="event",
+            name="ticket_price",
             field=models.CharField(blank=True, max_length=15, null=True),
         ),
     ]

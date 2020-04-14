@@ -14,7 +14,8 @@
         <form action="{% url 'theater'  %}" method="POST">
             {% csrf_token %}
           <div class="form-group">
-          <input type="hidden" required class="form-control" name="_method" value = "POST">
+          <input type="hidden" required class="form-control" name="_method" value = "POST"
+                 enctype="multipart/form-data">
 
           <label>Название</label>
           <br>
@@ -46,8 +47,8 @@
           <input type="checkbox" name="free" value="0" class="mr-2 mb-2">Бесплатно<br>
           <input type="text" required class="form-control" name="price">
           <br>
-             <label for="exampleFormControlFile1">Прикрепить изображение</label>
-                  <input type="file" class="form-control-file" id="exampleFormControlFile1">
+             <label for="upload_image">Прикрепить изображение</label>
+                  <input type="file" class="form-control-file" id="upload_image" name="upload_image">
           </div>
           <div class="form-group">
             <button class="btn btn-primary" type="submit">Добавить</button>

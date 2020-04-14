@@ -6,47 +6,44 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('poster_app', '0001_initial'),
+        ("poster_app", "0001_initial"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='event',
-            name='data_time',
-        ),
+        migrations.RemoveField(model_name="event", name="data_time",),
         migrations.AddField(
-            model_name='event',
-            name='data_time_begin',
+            model_name="event",
+            name="data_time_begin",
             field=models.DateTimeField(null=True),
         ),
         migrations.AddField(
-            model_name='event',
-            name='data_time_end',
+            model_name="event",
+            name="data_time_end",
             field=models.DateTimeField(null=True),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='address',
+            model_name="event",
+            name="address",
             field=models.CharField(max_length=100, null=True),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='img_path',
+            model_name="event",
+            name="img_path",
             field=models.CharField(max_length=255, null=True),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='number_of_tickets',
+            model_name="event",
+            name="number_of_tickets",
             field=models.CharField(max_length=7, null=True),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='phone',
+            model_name="event",
+            name="phone",
             field=models.CharField(max_length=15, null=True),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='ticket_price',
+            model_name="event",
+            name="ticket_price",
             field=models.CharField(max_length=15, null=True),
         ),
     ]

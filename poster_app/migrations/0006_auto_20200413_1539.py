@@ -7,23 +7,29 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('poster_app', '0005_auto_20200413_1201'),
+        ("poster_app", "0005_auto_20200413_1201"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='EventStatus',
+            name="EventStatus",
             fields=[
-                ('id_event_status', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=50)),
+                (
+                    "id_event_status",
+                    models.AutoField(primary_key=True, serialize=False),
+                ),
+                ("name", models.CharField(max_length=50)),
             ],
-            options={
-                'db_table': 'event_status',
-            },
+            options={"db_table": "event_status",},
         ),
         migrations.AddField(
-            model_name='event',
-            name='id_event_status',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='poster_app.EventStatus'),
+            model_name="event",
+            name="id_event_status",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                to="poster_app.EventStatus",
+            ),
         ),
     ]
