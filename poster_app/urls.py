@@ -12,19 +12,14 @@ urlpatterns = [
     path('booking', views.booking, name='booking'),
 
     path('concert', views.concert, name='concert'),
-    path('concert_add', views.concert_add, name='concert_add'),
-    path('concert/<int:id>', views.concert_update, name='concert_update'),
+    path('concert/<int:event_id>', views.concert_update_detail, name='concert_update_detail'),
 
     path('conference', views.conference, name='conference'),
-    path('conference_add', views.conference_add, name='conference_add'),
-    path('conference/<int:id>', views.conference_update, name='conference_update'),
+    path('conference/<int:event_id>', views.conference_update_detail, name='conference_update_detail'),
 
     path('exhibition', views.exhibition, name='exhibition'),
-    # path('exhibition/add', views.exhibition_add, name='exhibition_add'),
     path('exhibition/<int:event_id>', views.exhibition_update_detail, name='exhibition_update_detail'),
-    #path('exhibition/detail/<int:event_id>', views.exhibition_detail, name='exhibition_detail'),
 
     path('theater', views.theater, name='theater'),
-    path('theater_add', views.theater_add, name='theater_add'),
-    path('theater/<int:id>', views.theater_update, name='theater_update'),
+    path('theater/<int:event_id>', views.theater_update_detail, name='theater_update_detail'),
 ]
