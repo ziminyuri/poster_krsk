@@ -7,13 +7,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from poster_app.models import *
 from poster_app.views.image import image_to_db
-from poster_app.views.index import data_for_index
 
 
 def index(request):
     # event_exhibitions = Event.objects.all().filter(ID_type_event=1)
     event_exhibitions = Event.objects.all()
-    # event_exhibitions = data_for_index(event_exhibitions)
+
     return render(
         request, "poster_app/index.html", {"events_exhibitions": event_exhibitions}
     )
@@ -71,8 +70,10 @@ def events(request):
                 )
 
             elif event_type == "Театр":
+                description_len: str = str(len(event.description))
                 return render(
-                    request, "poster_app/event/theater/update.html", {"event": event}
+                    request, "poster_app/event/theater/update.html", {"event": event,
+                                                                      "description_len": description_len}
                 )
 
             elif event_type == "Концерт":

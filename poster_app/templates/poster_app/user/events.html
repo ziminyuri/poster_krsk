@@ -22,7 +22,7 @@
                   {% endfor %}
               </select>
                 <br>
-              <button class="btn btn-primary btn-block" type="submit">Добавить</button>
+              <button class="btn btn-info btn-block" type="submit">Добавить</button>
 
           </form>
 
@@ -37,7 +37,7 @@
     </div>
   </section>
 
-    <button type="button" class="btn btn-outline-primary mb-2 ml-2 pl-4 pr-4" data-toggle="modal"
+    <button type="button" class="btn btn-outline-info mb-2 ml-2 pl-4 pr-4" data-toggle="modal"
                       data-target="#AddEventModal">Добавить</button>
 
 
@@ -48,6 +48,7 @@
                 <th>Название</th>
                 <th>Тип</th>
                 <th>Дата</th>
+                <th>Статус</th>
                 <th>Подробнее</th>
                 <th>Редактировать</th>
                 <th>Удалить</th>
@@ -58,7 +59,27 @@
                 <tr>
                     <td>{{ event.name }}</td>
                     <td>{{ event.ID_type_event.name }}</td>
-                    <td>{{ event.data_time_begin }} - {{ event.data_time_end }}</td>
+
+                    {% if event.id_type_exhibition.name == 'постоянная экспозиция' %}
+                    <td>{{ event.id_type_exhibition.name }}</td>
+                    {% elif event.id_type_exhibition.name == 'временная экспозиция' %}
+                    <td>{{ event.data_begin }} - {{ event.data_end }}</td>
+                    {% elif event.ID_type_event.name  == 'Конференция'%}
+                    <td>{{ event.data_begin }} - {{ event.data_end }}</td>
+                    {% else %}
+                    <td>{{ event.data_begin }} {{ event.time_begin }}</td>
+                    {% endif %}
+
+                    {% if event.id_event_status.name == 'Опубликовано' %}
+                        <td class="text-success">{{ event.id_event_status.name }}</td>
+                    {% elif event.id_event_status.name == 'Отклонено' %}
+                        <td class="text-danger">{{ event.id_event_status.name }}</td>
+                    {% elif event.id_event_status.name == 'Ожидает проверки' %}
+                        <td class="text-info">{{ event.id_event_status.name }}</td>
+                    {% else %}
+                        <td class="text-secondary">{{ event.id_event_status.name }}</td>
+                    {% endif %}
+
                     <td>
                         <a class="btn btn-outline-secondary btn-sm" href="{% url 'event_detail' event_id=event.ID_event  %}">
                         Подробнее</a>

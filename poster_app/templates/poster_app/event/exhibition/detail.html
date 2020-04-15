@@ -14,31 +14,32 @@
         <form>
             {% csrf_token %}
           <div class="form-group">
-          <label>Название</label>
+              <img src="{{ event.img }}" class="card-img-top">
           <br>
-          <p>{{ event.name }}</p>
           <br>
-          <label>Описание</label>
+          <h3>{{ event.name }}</h3>
           <br>
-          <p>{{ event.description }}</p>
-              <label>Адрес</label>
+          <label class="font-weight-bold">Описание</label>
+          <br>
+          <p class="text-justify">{{ event.description }}</p>
+          <br>
+              <label class="font-weight-bold">Адрес</label>
           <p>{{ event.address }}</p>
-          <br>
-            <label>Тип выставки</label>
+            <label class="font-weight-bold">Тип выставки</label>
           <p>{{ event.id_type_exhibition.name }}</p>
-          <br>
-
-          <label>Время начала</label>
+          <label class="font-weight-bold">Время начала</label>
           <br>
               <p>{{ event.time_begin }}</p>
-          <br>
-          <label>Время окончания</label>
+          <label class="font-weight-bold">Время окончания</label>
           <br>
                <p>{{ event.time_end }}</p>
-          <label>Стоимость билета</label>
+          <label class="font-weight-bold">Стоимость билета</label>
           <br>
-          <input type="checkbox" name="free" value="0" class="mr-2 mb-2">Бесплатно<br>
+              {% if event.isfree == True %}
+              <p>Бесплатно</p>
+              {% else %}
               <p>{{ event.ticket_price }}</p>
+              {% endif %}
           </div>
 
         </form>

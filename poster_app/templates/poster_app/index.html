@@ -17,16 +17,31 @@
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
               <img src="{{ event.img }}" class="card-img-top">
+          <h4 class="card-header">{{ event.name }}</h4>
             <div class="card-body">
-                <h4>{{ event.name }}</h4>
-              <p class="card-text">{{ event.description }}</p>
+
+
+                {% if event.id_type_exhibition.name == 'постоянная экспозиция' %}
+              <p class="card-text">{{ event.id_type_exhibition.name }}</p>
+                {% elif event.id_type_exhibition.name == 'временная экспозиция' %}
+                <p class="card-text">с {{ event.data_begin }} - по {{ event.data_end }}</p>
+                {% else %}
+                <p class="card-text">{{ event.data_begin }} {{ event.time_begin }}</p>
+                {% endif %}
+
+                <p class="card-text">{{ event.address }}</p>
+
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                     <a class="btn btn-sm btn-outline-secondary" href="{% url 'event_detail' event_id=event.ID_event  %}">
                         Посмотреть</a>
                   <button type="button" class="btn btn-sm btn-outline-secondary">Забронировать</button>
                 </div>
-                <small class="text-muted">9 mins</small>
+                  {% if event.isfree == True %}
+                <small class="text-muted">бесплатно</small>
+                  {% else %}
+                  <small class="text-muted">{{ event.ticket_price }}</small>
+                  {% endif %}
               </div>
             </div>
           </div>

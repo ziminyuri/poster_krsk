@@ -14,6 +14,7 @@
         <form>
             {% csrf_token %}
           <div class="form-group">
+              <img src="{{ event.img }}" class="card-img-top">
           <label>Название</label>
           <br>
           <p>{{ event.name }}</p>
