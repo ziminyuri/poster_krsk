@@ -51,20 +51,22 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#">Выставки</a>
+          <a class="nav-link" href="{% url 'index_exhibition' %}">Выставки</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Концерты</a>
+            <a class="nav-link" href="{% url 'index_concert' %}">Концерты</a>
         </li>
           <li class="nav-item">
-          <a class="nav-link" href="#">Конференции</a>
+          <a class="nav-link" href="{% url 'index_conference' %}">Конференции</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Театр</a>
+            <a class="nav-link" href="{% url 'index_theater' %}">Театр</a>
           </li>
       </ul>
-      <form class="form-inline mt-2 mt-md-0">
-        <input class="form-control mr-sm-2" type="text" placeholder="Введите поисковой запрос" aria-label="Search">
+      <form class="form-inline mt-2 mt-md-0" action="{% url 'search'  %}" method="POST">
+          {% csrf_token %}
+        <input class="form-control mr-sm-2" type="text" placeholder="Введите поисковой запрос" aria-label="Search"
+               name="search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
       </form>
         <button type="button" class="btn btn-outline-light ml-lg-5 my-2" data-toggle="modal"

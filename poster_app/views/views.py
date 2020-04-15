@@ -10,11 +10,57 @@ from poster_app.views.image import image_to_db
 
 
 def index(request):
-    # event_exhibitions = Event.objects.all().filter(ID_type_event=1)
-    event_exhibitions = Event.objects.all()
+    title = 'События'
+
+    events = Event.objects.all().filter(id_event_status__name='Опубликовано')
 
     return render(
-        request, "poster_app/index.html", {"events_exhibitions": event_exhibitions}
+        request, "poster_app/index.html", {"events": events, 'title': title}
+    )
+
+
+def index_concert(request):
+    title = 'Концерты'
+
+    events = Event.objects.all().filter(id_event_status__name='Опубликовано')
+    events = events.filter(ID_type_event__name='Концерт')
+
+
+    return render(
+        request, "poster_app/index.html", {"events": events, 'title': title}
+    )
+
+
+def index_conference(request):
+    title = 'Конференции'
+
+    events = Event.objects.all().filter(id_event_status__name='Опубликовано')
+    events = events.filter(ID_type_event__name='Конференция')
+
+    return render(
+        request, "poster_app/index.html", {"events": events, 'title': title}
+    )
+
+
+def index_exhibition(request):
+    title = 'Выставки'
+
+    events = Event.objects.all().filter(id_event_status__name='Опубликовано')
+    events = events.filter(ID_type_event__name='Выставка')
+
+    return render(
+        request, "poster_app/index.html", {"events": events, 'title': title}
+    )
+
+
+def index_theater(request):
+    title = 'Театр'
+
+    events = Event.objects.all().filter(id_event_status__name='Опубликовано')
+    events = events.filter(ID_type_event__name=title)
+
+    return render(
+        request, "poster_app/index.html", {"events": events, 'title': title}
     )
 
 
@@ -33,6 +79,12 @@ def auth_user(request):
                 json.dumps("Error sign in"), content_type="application/json"
             )
 
+
+def search(request):
+    events = Event.objects.all()
+    return render(
+        request, "poster_app/search.html", {"events": events}
+    )
 
 @login_required
 def profile(request):

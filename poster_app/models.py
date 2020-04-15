@@ -71,15 +71,9 @@ class Event(models.Model):
     ID_user_profile = models.ForeignKey(UserProfile, models.DO_NOTHING)
 
     user_name: str = str(ID_user_profile.name)
-    img = models.ImageField(
-        upload_to=(user_name + "events"), default=settings.MEDIA_URL + "defualt.jpg"
-    )
-    id_type_exhibition = models.ForeignKey(
-        TypeExhibition, models.DO_NOTHING, blank=True, null=True
-    )
-    id_event_status = models.ForeignKey(
-        EventStatus, models.DO_NOTHING, blank=True, null=True
-    )
+    img = models.ImageField(upload_to=(user_name + "events"), default=settings.MEDIA_URL + "defualt.jpg")
+    id_type_exhibition = models.ForeignKey(TypeExhibition, models.DO_NOTHING, blank=True, null=True)
+    id_event_status = models.ForeignKey(EventStatus, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         db_table = "event"

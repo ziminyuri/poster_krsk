@@ -1,0 +1,36 @@
+{% extends "poster_app/base.html" %}
+{% block content %}
+
+
+<main role="main">
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1>Результаты поиска</h1>
+    </div>
+  </section>
+{% load static %}
+
+    <div class="container">
+
+
+        {% for event in events %}
+            <div class="row mb-3">
+            <div class="card">
+            <div class="card-header">
+    {{ event.name }}
+  </div>
+  <div class="card-body">
+    Тип: {{ event.ID_type_event.name }}
+  </div>
+</div>
+    </div>
+          {% endfor %}
+
+    </div>
+
+
+</main>
+
+
+
+{% endblock %}

@@ -42,5 +42,5 @@ else {
     document.getElementById("label_date_begin").classList.remove('d-none');
     document.getElementById("label_date_end").classList.remove('d-none');
 }
-//document.getElementById('colorDiv').style.background=colortxt;
+
 }
