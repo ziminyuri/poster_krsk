@@ -60,17 +60,17 @@ def events(request):
             event_type: str = data["event_type"]
             event_id: int = int(data["event"])
             event = get_object_or_404(Event, ID_event=event_id)
+            description_len: str = str(len(event.description))
 
             if event_type == "Выставка":
                 exhibition_types = TypeExhibition.objects.all()
                 return render(
                     request,
                     "poster_app/event/exhibition/update.html",
-                    {"exhibition_types": exhibition_types, "event": event},
+                    {"exhibition_types": exhibition_types, "event": event, "description_len": description_len},
                 )
 
             elif event_type == "Театр":
-                description_len: str = str(len(event.description))
                 return render(
                     request, "poster_app/event/theater/update.html", {"event": event,
                                                                       "description_len": description_len}
@@ -78,12 +78,12 @@ def events(request):
 
             elif event_type == "Концерт":
                 return render(
-                    request, "poster_app/event/concert/update.html", {"event": event}
+                    request, "poster_app/event/concert/update.html", {"event": event,  "description_len": description_len}
                 )
 
             elif event_type == "Конференция":
                 return render(
-                    request, "poster_app/event/conference/update.html", {"event": event}
+                    request, "poster_app/event/conference/update.html", {"event": event,  "description_len": description_len}
                 )
 
         elif data["_method"] == "DELETE":

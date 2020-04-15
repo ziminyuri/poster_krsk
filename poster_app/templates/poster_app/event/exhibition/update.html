@@ -24,9 +24,9 @@
 
           <label>Описание</label>
           <br>
-          <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name="description">
-              {{ event.description }}
+          <textarea class="form-control" id="description" rows="4" name="description">{{ event.description }}
           </textarea>
+           <div class="counter">Осталось символов: <span id="counter">{{ description_len }}</span></div>
           <br>
 
           <label>Адрес</label>
@@ -36,14 +36,46 @@
 
             <label>Тип выставки</label>
           <br>
-            <select id="RequestType" class="form-control" name="exhibition_type" id="exhibition_type">
+            <select class="form-control" name="exhibition_type" id="exhibition_type"
+            onchange="changeType()">
                 {% for exhibition_type in exhibition_types %}
-                    <option selected value= "{{ exhibition_type.id_type_exhibition }}">
-                        {{ exhibition_type.name }}
-                    </option>
+
+                    {% if exhibition_type.id_type_exhibition == event.id_type_exhibition %}
+                <option value="{{ exhibition_type.id_type_exhibition }}" selected="selected">
+                {{ exhibition_type.name }}
+                </option>
+                    {% else %}
+                    <option value="{{ exhibition_type.id_type_exhibition }}">
+                {{ exhibition_type.name }}
+                </option>
+                    {% endif %}
+
+
                 {% endfor %}
             </select>
           <br>
+
+          {% if event.id_type_exhibition.name == 'постоянная экспозиция' %}
+          <label class="d-none mb-2" id="label_date_begin">Дата начала</label>
+
+          <input type="date" class="form-control d-none mb-2" name="date_begin" id="date_begin" required
+                 value = "{{event.data_begin|date:"Y-m-d" }}">
+
+          <label class="d-none mb-2" id="label_date_end">Дата окончания</label>
+
+          <input type="date" class="form-control d-none mb-2" name="date_end" id="date_end" required
+          value = "{{event.data_end|date:"Y-m-d" }}">
+
+
+          {% else %}
+          <label id="label_date_begin" class="mb-2">Дата начала</label>
+          <input type="date" class="form-control mb-2" name="date_begin" id="date_begin" required
+                 value = "{{event.data_begin|date:"Y-m-d" }}">
+          <label id="label_date_end" class="mb-2">Дата окончания</label>
+          <input type="date" class="form-control mb-2" name="date_end" id="date_end" required
+          value = "{{event.data_end|date:"Y-m-d" }}">
+
+        {% endif %}
 
           <label>Время начала</label>
           <br>
@@ -57,9 +89,11 @@
           <br>
           <label>Стоимость билета</label>
           <br>
-          <input type="checkbox" name="free" value="0" class="mr-2 mb-2">Бесплатно<br>
-          <input type="text" required class="form-control" name="price" id="price" value = "{{ event.ticket_price }}">
+          <input type="checkbox" id='isfree' name="isfree" class="mr-2 mb-2" >Бесплатно<br>
+          <input type="text" required class="form-control mt-2" id='price' name="price" value = "{{ event.ticket_price }}">
           <br>
+          <img src="{{ event.img }}" class="card-img-top">
+              <br>
              <label for="upload_image">Прикрепить изображение</label>
                   <input type="file" class="form-control-file" id="upload_image" name="upload_image">
           </div>
@@ -72,4 +106,9 @@
     </div>
 </row>
 </div>
+{% endblock %}
+
+{% block script%}
+    {% load static %}
+<script src="{% static 'poster_app/js/add_update_event.js' %}"></script>
 {% endblock %}

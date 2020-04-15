@@ -24,8 +24,9 @@
 
           <label>Описание</label>
           <br>
-          <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name="description">{{ event.description }}
+          <textarea class="form-control" id="description" rows="4" name="description">{{ event.description }}
           </textarea>
+               <div class="counter">Осталось символов: <span id="counter">{{ description_len }}</span></div>
           <br>
 
           <label>Адрес</label>
@@ -35,7 +36,7 @@
 
           <label>Дата</label>
           <br>
-          <input type="date" class="form-control" name="date" required value = "{{ event.data_begin }}">
+          <input type="date" class="form-control" name="date" required value = "{{event.data_begin|date:"Y-m-d" }}">
           <br>
 
           <label>Время начала</label>
@@ -46,14 +47,16 @@
 
           <label>Стоимость билета</label>
           <br>
-          <input type="checkbox" name="free" value="0" class="mr-2 mb-2">Бесплатно<br>
-          <input type="text" required class="form-control" name="price" value = "{{ event.ticket_price }}">
+          <input type="checkbox" id='isfree' name="isfree" class="mr-2 mb-2" >Бесплатно<br>
+          <input type="text" required class="form-control mt-2" id='price' name="price" value = "{{ event.ticket_price }}">
           <br>
+              <img src="{{ event.img }}" class="card-img-top">
+              <br>
              <label for="upload_image">Прикрепить изображение</label>
-                  <input type="file" class="form-control-file" id="upload_image" name="upload_image">
+                  <input type="file" class="form-control-file" id="upload_image" name="upload_image" value="{{ event.img.name }}">
           </div>
           <div class="form-group">
-            <button class="btn btn-primary" type="submit">Добавить</button>
+            <button class="btn btn-info" type="submit">Добавить</button>
           </div>
         </form>
     </div>
@@ -61,4 +64,9 @@
     </div>
 </row>
 </div>
+{% endblock %}
+
+{% block script%}
+    {% load static %}
+<script src="{% static 'poster_app/js/add_update_event.js' %}"></script>
 {% endblock %}

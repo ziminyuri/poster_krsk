@@ -25,3 +25,22 @@ $('#isfree').click(function(){
 		$('#price').show();
 	}
 });
+
+function changeType() {
+var eID = document.getElementById("exhibition_type");
+var exhibition_type = eID.options[eID.selectedIndex].text;
+
+if (exhibition_type === 'постоянная экспозиция'){
+    document.getElementById("date_begin").classList.add('d-none');
+    document.getElementById("date_end").classList.add('d-none');
+    document.getElementById("label_date_begin").classList.add('d-none');
+    document.getElementById("label_date_end").classList.add('d-none');
+}
+else {
+    document.getElementById("date_begin").classList.remove('d-none');
+    document.getElementById("date_end").classList.remove('d-none');
+    document.getElementById("label_date_begin").classList.remove('d-none');
+    document.getElementById("label_date_end").classList.remove('d-none');
+}
+//document.getElementById('colorDiv').style.background=colortxt;
+}
