@@ -6,12 +6,11 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from poster_app.models import *
-from poster_app.views.image import image_to_db
+from poster_app.views.logics import update_event, add_event
 
 
 def index(request):
     title = 'События'
-
     events = Event.objects.all().filter(id_event_status__name='Опубликовано')
 
     return render(
@@ -179,29 +178,7 @@ def concert(request):
         data = request.POST
 
         if data["_method"] == "POST":
-            type_event = get_object_or_404(TypeEvent, name="Концерт")
-            name = data["name"]
-            description = data["description"]
-            address = data["address"]
-            time_begin = data["time_begin"]
-            date = data["date"]
-            # isfree = data['free']
-            price = data["price"]
-
-            user = get_object_or_404(UserProfile, user=request.user)
-            img_path_db = image_to_db(request, user)
-
-            Event.objects.create(
-                name=name,
-                address=address,
-                description=description,
-                time_begin=time_begin,
-                data_begin=date,
-                ticket_price=price,
-                ID_type_event=type_event,
-                ID_user_profile=user,
-                img=img_path_db,
-            )
+            add_event(request, data)
 
             return redirect("events")
 
@@ -213,27 +190,7 @@ def concert_update_detail(request, event_id: int):
         data = request.POST
 
         if data["_method"] == "PUT":
-            name = data["name"]
-            description = data["description"]
-            address = data["address"]
-            time_begin = data["time_begin"]
-            date = data["date"]
-            # isfree = data['free']
-            price = data["price"]
-
-            user = get_object_or_404(UserProfile, user=request.user)
-            img_path_db = image_to_db(request, user)
-
-            Event.objects.filter(ID_event=event_id).update(
-                name=name,
-                description=description,
-                address=address,
-                time_begin=time_begin,
-                data_begin=date,
-                ticket_price=price,
-                img=img_path_db,
-            )
-
+            update_event(request, data, event_id)
             return redirect(events)
 
     event = get_object_or_404(Event, ID_event=event_id)
@@ -245,34 +202,7 @@ def conference(request):
         data = request.POST
 
         if data["_method"] == "POST":
-            type_event = get_object_or_404(TypeEvent, name="Конференция")
-            name = data["name"]
-            description = data["description"]
-            address = data["address"]
-            date_begin = data["date_begin"]
-            date_end = data["date_end"]
-            time_begin = data["time_begin"]
-            time_end = data["time_end"]
-            # isfree = data['free']
-            price = data["price"]
-
-            user = get_object_or_404(UserProfile, user=request.user)
-            img_path_db = image_to_db(request, user)
-
-            Event.objects.create(
-                name=name,
-                address=address,
-                description=description,
-                time_begin=time_begin,
-                time_end=time_end,
-                ticket_price=price,
-                ID_type_event=type_event,
-                ID_user_profile=user,
-                data_begin=date_begin,
-                data_end=date_end,
-                img=img_path_db,
-            )
-
+            add_event(request, data, 'Конференция')
             return redirect("events")
 
     return render(request, "poster_app/event/conference/add.html")
@@ -283,31 +213,7 @@ def conference_update_detail(request, event_id: int):
         data = request.POST
 
         if data["_method"] == "PUT":
-            name = data["name"]
-            description = data["description"]
-            address = data["address"]
-            time_begin = data["time_begin"]
-            time_end = data["time_end"]
-            # isfree = data['free']
-            price = data["price"]
-            date_begin = data["date_begin"]
-            date_end = data["date_end"]
-
-            user = get_object_or_404(UserProfile, user=request.user)
-            img_path_db = image_to_db(request, user)
-
-            Event.objects.filter(ID_event=event_id).update(
-                name=name,
-                description=description,
-                address=address,
-                time_begin=time_begin,
-                time_end=time_end,
-                ticket_price=price,
-                data_begin=date_begin,
-                data_end=date_end,
-                img=img_path_db,
-            )
-
+            update_event(request, data, event_id, 'Конференция')
             return redirect(events)
 
     event = get_object_or_404(Event, ID_event=event_id)
@@ -320,33 +226,7 @@ def exhibition(request):
         data = request.POST
 
         if data["_method"] == "POST":
-            type_event = get_object_or_404(TypeEvent, name="Выставка")
-            name = data["name"]
-            description = data["description"]
-            address = data["address"]
-            exhibition_type = get_object_or_404(
-                TypeExhibition, id_type_exhibition=data["exhibition_type"]
-            )
-            time_begin = data["time_begin"]
-            time_end = data["time_end"]
-            # isfree = data['free']
-            price = data["price"]
-            user = get_object_or_404(UserProfile, user=request.user)
-
-            img_path_db = image_to_db(request, user)
-            Event.objects.create(
-                name=name,
-                address=address,
-                description=description,
-                time_begin=time_begin,
-                time_end=time_end,
-                ticket_price=price,
-                id_type_exhibition=exhibition_type,
-                ID_type_event=type_event,
-                ID_user_profile=user,
-                img=img_path_db,
-            )
-
+            add_event(request, data, 'Выставка')
             return redirect("events")
 
     exhibition_types = TypeExhibition.objects.all()
@@ -362,30 +242,7 @@ def exhibition_update_detail(request, event_id: int):
         data = request.POST
 
         if data["_method"] == "PUT":
-            name = data["name"]
-            description = data["description"]
-            address = data["address"]
-            exhibition_type = get_object_or_404(
-                TypeExhibition, id_type_exhibition=data["exhibition_type"]
-            )
-            time_begin = data["time_begin"]
-            time_end = data["time_end"]
-            # isfree = data['free']
-            price = data["price"]
-            user = get_object_or_404(UserProfile, user=request.user)
-            img_path_db = image_to_db(request, user)
-
-            Event.objects.filter(ID_event=event_id).update(
-                name=name,
-                description=description,
-                address=address,
-                id_type_exhibition=exhibition_type,
-                time_begin=time_begin,
-                time_end=time_end,
-                ticket_price=price,
-                img=img_path_db,
-            )
-
+            update_event(request, data, event_id, 'Выставка')
             return redirect(events)
 
     event = get_object_or_404(Event, ID_event=event_id)
@@ -397,30 +254,7 @@ def theater(request):
         data = request.POST
 
         if data["_method"] == "POST":
-            type_event = get_object_or_404(TypeEvent, name="Театр")
-            name = data["name"]
-            description = data["description"]
-            address = data["address"]
-            time_begin = data["time_begin"]
-            date = data["date"]
-            # isfree = data['free']
-            price = data["price"]
-
-            user = get_object_or_404(UserProfile, user=request.user)
-            img_path_db = image_to_db(request, user)
-
-            Event.objects.create(
-                name=name,
-                address=address,
-                description=description,
-                time_begin=time_begin,
-                data_begin=date,
-                ticket_price=price,
-                ID_type_event=type_event,
-                ID_user_profile=user,
-                img=img_path_db,
-            )
-
+            add_event(request, data, 'Театр')
             return redirect("events")
 
     return render(request, "poster_app/event/theater/add.html")
@@ -431,26 +265,7 @@ def theater_update_detail(request, event_id: int):
         data = request.POST
 
         if data["_method"] == "PUT":
-            name = data["name"]
-            description = data["description"]
-            address = data["address"]
-            time_begin = data["time_begin"]
-            date = data["date"]
-            # isfree = data['free']
-            price = data["price"]
-
-            user = get_object_or_404(UserProfile, user=request.user)
-            img_path_db = image_to_db(request, user)
-
-            Event.objects.filter(ID_event=event_id).update(
-                name=name,
-                description=description,
-                address=address,
-                time_begin=time_begin,
-                data_begin=date,
-                ticket_price=price,
-                img=img_path_db,
-            )
+            update_event(request, data, event_id, 'Театр')
             return redirect(events)
 
     event = get_object_or_404(Event, ID_event=event_id)

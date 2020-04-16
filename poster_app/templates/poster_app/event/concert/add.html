@@ -43,8 +43,15 @@
 
           <label>Стоимость билета</label>
           <br>
-          <input type="checkbox" name="free" value="0" class="mr-2 mb-2">Бесплатно<br>
-          <input type="text" required class="form-control" name="price">
+
+          {% if event.isfree == True %}
+          <input type="checkbox" id='123' name="123" class="mr-2 mb-2" checked>Бесплатно<br>
+          <input type="text" class="form-control mt-2 d-none" id='price' name="price" value = "{{ event.ticket_price }}">
+          {% else %}
+          <input type="checkbox" id='123' name="123" class="mr-2 mb-2">Бесплатно<br>
+            <input type="text" class="form-control mt-2" id='price' name="price" value = "{{ event.ticket_price }}">
+          {% endif %}
+
           <br>
              <label for="upload_image">Прикрепить изображение</label>
                   <input type="file" class="form-control-file" id="upload_image" name="upload_image">

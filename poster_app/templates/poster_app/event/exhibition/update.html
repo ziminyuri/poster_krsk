@@ -58,12 +58,12 @@
           {% if event.id_type_exhibition.name == 'постоянная экспозиция' %}
           <label class="d-none mb-2" id="label_date_begin">Дата начала</label>
 
-          <input type="date" class="form-control d-none mb-2" name="date_begin" id="date_begin" required
+          <input type="date" class="form-control d-none mb-2" name="date_begin" id="date_begin"
                  value = "{{event.data_begin|date:"Y-m-d" }}">
 
           <label class="d-none mb-2" id="label_date_end">Дата окончания</label>
 
-          <input type="date" class="form-control d-none mb-2" name="date_end" id="date_end" required
+          <input type="date" class="form-control d-none mb-2" name="date_end" id="date_end"
           value = "{{event.data_end|date:"Y-m-d" }}">
 
 
@@ -89,8 +89,14 @@
           <br>
           <label>Стоимость билета</label>
           <br>
-          <input type="checkbox" id='isfree' name="isfree" class="mr-2 mb-2" >Бесплатно<br>
-          <input type="text" required class="form-control mt-2" id='price' name="price" value = "{{ event.ticket_price }}">
+          {% if event.isfree == True %}
+          <input type="checkbox" id='123' name="123" class="mr-2 mb-2" checked>Бесплатно<br>
+          <input type="text" class="form-control mt-2 d-none" id='price' name="price" value = "{{ event.ticket_price }}">
+          {% else %}
+          <input type="checkbox" id='123' name="123" class="mr-2 mb-2">Бесплатно<br>
+            <input type="text" class="form-control mt-2" id='price' name="price" value = "{{ event.ticket_price }}">
+          {% endif %}
+
           <br>
           <img src="{{ event.img }}" class="card-img-top">
               <br>

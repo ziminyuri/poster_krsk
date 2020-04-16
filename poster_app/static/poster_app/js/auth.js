@@ -22,8 +22,8 @@ $("#auth_block").submit(function (event) {
                 }
 
                 else {
-                    $(".error_auth_label").text("Sign in1");
-                    console.log('Sign in1');
+                    //$(".error_auth_label").text("Sign in1");
+                    //console.log('Sign in1');
                     window.location = "http://127.0.0.1:8000/events"
                 }
             }

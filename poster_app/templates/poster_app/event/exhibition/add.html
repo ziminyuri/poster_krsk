@@ -23,7 +23,8 @@
 
           <label>Описание</label>
           <br>
-          <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name="description"></textarea>
+          <textarea class="form-control" id="description" rows="4" name="description"></textarea>
+          <div class="counter">Осталось символов: <span id="counter">2000</span></div>
           <br>
 
           <label>Адрес</label>
@@ -33,7 +34,8 @@
 
             <label>Тип выставки</label>
           <br>
-            <select id="RequestType" class="form-control" name="exhibition_type">
+           <select class="form-control" name="exhibition_type" id="exhibition_type"
+            onchange="changeType()">
                 {% for exhibition_type in exhibition_types %}
                     <option selected value= "{{ exhibition_type.id_type_exhibition }}">
                         {{ exhibition_type.name }}
@@ -41,6 +43,15 @@
                 {% endfor %}
             </select>
           <br>
+          <label class="d-none mb-2" id="label_date_begin">Дата начала</label>
+
+          <input type="date" class="form-control d-none mb-2" name="date_begin" id="date_begin"
+                 value = "{{event.data_begin|date:"Y-m-d" }}">
+
+          <label class="d-none mb-2" id="label_date_end">Дата окончания</label>
+
+          <input type="date" class="form-control d-none mb-2" name="date_end" id="date_end"
+          value = "{{event.data_end|date:"Y-m-d" }}">
 
           <label>Время начала</label>
           <br>
@@ -52,8 +63,15 @@
           <br>
           <label>Стоимость билета</label>
           <br>
-          <input type="checkbox" name="free" value="0" class="mr-2 mb-2">Бесплатно<br>
-          <input type="text" required class="form-control" name="price">
+
+         {% if event.isfree == True %}
+          <input type="checkbox" id='123' name="123" class="mr-2 mb-2" checked>Бесплатно<br>
+          <input type="text" class="form-control mt-2 d-none" id='price' name="price" value = "{{ event.ticket_price }}">
+          {% else %}
+          <input type="checkbox" id='123' name="123" class="mr-2 mb-2">Бесплатно<br>
+            <input type="text" class="form-control mt-2" id='price' name="price" value = "{{ event.ticket_price }}">
+          {% endif %}
+
           <br>
           <label for="upload_image">Прикрепить изображение</label>
                   <input type="file" class="form-control-file" id="upload_image" name="upload_image">
@@ -67,4 +85,9 @@
     </div>
 </row>
 </div>
+{% endblock %}
+
+{% block script%}
+    {% load static %}
+<script src="{% static 'poster_app/js/add_update_event.js' %}"></script>
 {% endblock %}

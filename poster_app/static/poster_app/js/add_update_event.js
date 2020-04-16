@@ -18,11 +18,11 @@ $(document).ready(function(){
 });
 
 
-$('#isfree').click(function(){
+$('#123').click(function(){
 	if ($(this).is(':checked')){
-		$('#price').hide();
+		document.getElementById("price").classList.add('d-none');
 	} else {
-		$('#price').show();
+		document.getElementById("price").classList.remove('d-none');
 	}
 });
 

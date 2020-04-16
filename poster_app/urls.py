@@ -6,10 +6,10 @@ from .views import views
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("concert", views.index_concert, name="index_concert"),
-    path("conference", views.index_conference, name="index_conference"),
-    path("exhibition", views.index_exhibition, name="index_exhibition"),
-    path("theater", views.index_theater, name="index_theater"),
+    path("concert/all", views.index_concert, name="index_concert"),
+    path("conference/all", views.index_conference, name="index_conference"),
+    path("exhibition/all", views.index_exhibition, name="index_exhibition"),
+    path("theater/all", views.index_theater, name="index_theater"),
 
     path("auth_user", views.auth_user, name="auth_user"),
     path("search", views.search, name="search"),
