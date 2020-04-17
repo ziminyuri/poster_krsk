@@ -111,7 +111,7 @@ def events(request):
             event_type: str = data["event_type"]
             event_id: int = int(data["event"])
             event = get_object_or_404(Event, ID_event=event_id)
-            description_len: str = str(len(event.description))
+            description_len: str = str(2000 - len(event.description))
 
             if event_type == "Выставка":
                 exhibition_types = TypeExhibition.objects.all()
@@ -178,7 +178,7 @@ def concert(request):
         data = request.POST
 
         if data["_method"] == "POST":
-            add_event(request, data)
+            add_event(request, data, 'Концерт')
 
             return redirect("events")
 
@@ -190,7 +190,7 @@ def concert_update_detail(request, event_id: int):
         data = request.POST
 
         if data["_method"] == "PUT":
-            update_event(request, data, event_id)
+            update_event(request, data, event_id, 'Концерт')
             return redirect(events)
 
     event = get_object_or_404(Event, ID_event=event_id)

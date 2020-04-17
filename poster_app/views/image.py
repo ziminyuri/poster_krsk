@@ -1,9 +1,11 @@
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from PIL import Image
+from django.shortcuts import get_object_or_404
+from poster_app.models import Event
 
 
-def image_to_db(request, user) -> str:
+def image_to_db(request, user, event_id=None, f_update=False) -> str:
     try:
         uploaded_img = request.FILES["upload_image"]
         fs = FileSystemStorage()
@@ -21,6 +23,12 @@ def image_to_db(request, user) -> str:
         img_path_db: str = settings.MEDIA_URL + user.user.username + "/" + uploaded_img.name
 
     except:
-        img_path_db = settings.MEDIA_URL + "defualt.jpg"
+        if f_update:
+            event = get_object_or_404(Event, ID_event=event_id)
+            img = event.img
+            img_path_db = img.name
+
+        else:
+            img_path_db = settings.MEDIA_URL + "defualt.jpg"
 
     return img_path_db

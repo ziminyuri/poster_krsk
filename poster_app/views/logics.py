@@ -24,6 +24,10 @@ def add_event(request, data, type):
         )
         time_end = data["time_end"]
 
+        if exhibition_type.name == 'временная экспозиция':
+            date_begin = data["date_begin"]
+            date_end = data["date_end"]
+
 
     user = get_object_or_404(UserProfile, user=request.user)
     img_path_db = image_to_db(request, user)
@@ -42,19 +46,72 @@ def add_event(request, data, type):
     else:
         price = data["price"]
 
-    Event.objects.create(
-        name=name,
-        address=address,
-        description=description,
-        time_begin=time_begin,
-        data_begin=date,
-        ticket_price=price,
-        ID_type_event=type_event,
-        ID_user_profile=user,
-        img=img_path_db,
-        isfree=is_free,
-        id_event_status=status
-    )
+    if type == 'Концерт' or type == 'Театр':
+        Event.objects.create(
+            name=name,
+            address=address,
+            description=description,
+            time_begin=time_begin,
+            data_begin=date,
+            ticket_price=price,
+            ID_type_event=type_event,
+            ID_user_profile=user,
+            img=img_path_db,
+            isfree=is_free,
+            id_event_status=status
+        )
+
+    elif type == 'Конференция':
+        Event.objects.create(
+            name=name,
+            address=address,
+            description=description,
+            time_begin=time_begin,
+            data_begin=date_begin,
+            ticket_price=price,
+            ID_type_event=type_event,
+            ID_user_profile=user,
+            img=img_path_db,
+            isfree=is_free,
+            id_event_status=status,
+            data_end=date_end,
+            time_end=time_end
+        )
+
+    elif type == 'Выставка':
+        if exhibition_type.name == 'временная экспозиция':
+            Event.objects.create(
+                name=name,
+                address=address,
+                description=description,
+                time_begin=time_begin,
+                ticket_price=price,
+                ID_type_event=type_event,
+                ID_user_profile=user,
+                img=img_path_db,
+                isfree=is_free,
+                id_event_status=status,
+                time_end=time_end,
+                id_type_exhibition=exhibition_type,
+                data_begin=date_begin,
+                data_end=date_end
+            )
+
+        else:
+            Event.objects.create(
+                name=name,
+                address=address,
+                description=description,
+                time_begin=time_begin,
+                ticket_price=price,
+                ID_type_event=type_event,
+                ID_user_profile=user,
+                img=img_path_db,
+                isfree=is_free,
+                id_event_status=status,
+                time_end=time_end,
+                id_type_exhibition=exhibition_type
+            )
 
 
 def update_event(request, data, event_id, type):
@@ -83,7 +140,7 @@ def update_event(request, data, event_id, type):
         time_end = data["time_end"]
 
     user = get_object_or_404(UserProfile, user=request.user)
-    img_path_db = image_to_db(request, user)
+    img_path_db = image_to_db(request, user, event_id=event_id, f_update=True)
 
     status = get_object_or_404(
         EventStatus, name='Ожидает проверки'
@@ -99,14 +156,64 @@ def update_event(request, data, event_id, type):
     else:
         price = data["price"]
 
-    Event.objects.filter(ID_event=event_id).update(
-        name=name,
-        description=description,
-        address=address,
-        time_begin=time_begin,
-        data_begin=date,
-        ticket_price=price,
-        img=img_path_db,
-        isfree=is_free,
-        id_event_status=status
-    )
+    if type == 'Концерт' or type == 'Театр':
+        Event.objects.filter(ID_event=event_id).update(
+            name=name,
+            description=description,
+            address=address,
+            time_begin=time_begin,
+            data_begin=date,
+            ticket_price=price,
+            img=img_path_db,
+            isfree=is_free,
+            id_event_status=status
+        )
+
+    elif type == 'Конференция':
+        Event.objects.filter(ID_event=event_id).update(
+            name=name,
+            address=address,
+            description=description,
+            time_begin=time_begin,
+            data_begin=date_begin,
+            ticket_price=price,
+            ID_user_profile=user,
+            img=img_path_db,
+            isfree=is_free,
+            id_event_status=status,
+            data_end=date_end,
+            time_end=time_end
+        )
+
+    elif type == 'Выставка':
+        if f_exhibition_type_temp:
+            Event.objects.filter(ID_event=event_id).update(
+                name=name,
+                address=address,
+                description=description,
+                time_begin=time_begin,
+                ticket_price=price,
+                ID_user_profile=user,
+                img=img_path_db,
+                isfree=is_free,
+                id_event_status=status,
+                time_end=time_end,
+                id_type_exhibition=exhibition_type,
+                data_begin=date_begin,
+                data_end=date_end
+            )
+
+        else:
+            Event.objects.filter(ID_event=event_id).update(
+                name=name,
+                address=address,
+                description=description,
+                time_begin=time_begin,
+                ticket_price=price,
+                ID_user_profile=user,
+                img=img_path_db,
+                isfree=is_free,
+                id_event_status=status,
+                time_end=time_end,
+                id_type_exhibition=exhibition_type
+            )
