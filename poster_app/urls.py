@@ -13,6 +13,7 @@ urlpatterns = [
 
     path("auth_user", views.auth_user, name="auth_user"),
     path("search", views.search, name="search"),
+    path("registration", views.registration, name="registration"),
 
     path("profile", views.profile, name="profile"),
     path("events", views.events, name="events"),

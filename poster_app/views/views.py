@@ -79,10 +79,39 @@ def auth_user(request):
             )
 
 
+def registration(request):
+    return render(request, "poster_app/registration.html")
+
+
 def search(request):
-    events = Event.objects.all()
+    flag_name = 0
+    flag_description = 0
+
+    name_events = []
+    description_events = []
+
+    if request.method == "POST":
+        query_search = request.POST['search']
+        query_search = query_search.lower()
+        events = Event.objects.all()
+
+        for event in events:
+            name = event.name.lower()
+            f = name.find(query_search)
+            if f != -1:
+                name_events.append(event)
+                flag_name = 1
+
+        for event in events:
+            description = event.description.lower()
+            f = description.find(query_search)
+            if f != -1:
+                description_events.append(event)
+                flag_description = 1
+
     return render(
-        request, "poster_app/search.html", {"events": events}
+        request, "poster_app/search.html", {"name_events": name_events, 'description_events': description_events,
+                                            'flag_name': flag_name, 'flag_description': flag_description}
     )
 
 @login_required

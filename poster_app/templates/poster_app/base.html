@@ -13,6 +13,7 @@
 </head>
 <body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -30,7 +31,8 @@
     <p class="error_auth_label mt-3 mb-3"></p>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
              <p class="mt-3 mb-3 auth_label">или</p>
-            <button class="btn btn-outline-primary btn-block" >Регистрация</button>
+            <a class="btn btn-outline-primary btn-block" href="{% url 'registration' %}">
+                        Регистрация</a>
         </form>
 
       </div>
@@ -49,7 +51,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
-      <ul class="navbar-nav mr-auto">
+      <ul class="navbar-nav mr-auto w-75">
         <li class="nav-item">
           <a class="nav-link" href="{% url 'index_exhibition' %}">Выставки</a>
         </li>
@@ -62,13 +64,16 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'index_theater' %}">Театр</a>
           </li>
-      </ul>
-      <form class="form-inline mt-2 mt-md-0" action="{% url 'search'  %}" method="POST">
+          <li class="nav-item w-75">
+            <form class="form-inline ml-5 mt-2 mt-md-0" action="{% url 'search'  %}" method="POST">
           {% csrf_token %}
-        <input class="form-control mr-sm-2" type="text" placeholder="Введите поисковой запрос" aria-label="Search"
+        <input class="form-control mr-sm-2 w-75" type="text" placeholder="Введите поисковой запрос" aria-label="Search"
                name="search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
       </form>
+          </li>
+      </ul>
+
         <button type="button" class="btn btn-outline-light ml-lg-5 my-2" data-toggle="modal"
                       data-target="#myModal">
                   Войти в личный кабинет

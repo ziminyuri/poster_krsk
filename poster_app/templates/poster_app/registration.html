@@ -1,0 +1,67 @@
+{% extends "poster_app/base.html" %}
+{% block content %}
+
+    <section class="jumbotron text-center">
+    <div class="container">
+        <h1>Регистрация</h1>
+    </div>
+  </section>
+<div class="container">
+<row>
+    <div class="col">
+    </div>
+<div class="col-6">
+        <form action="{% url 'registration'  %}" method="POST">
+
+            {% csrf_token %}
+          <div class="form-group">
+          <input type="hidden" required class="form-control" name="_method" value = "POST">
+
+          <label>Имя</label>
+          <br>
+          <input type="text" required class="form-control" name="name">
+          <br>
+
+          <label>Фамилия</label>
+          <br>
+          <input type="text" required class="form-control" name="surname">
+          <br>
+
+          <label>Логин</label>
+          <br>
+          <input type="text" required class="form-control" name="login">
+          <br>
+
+          <label>Пароль</label>
+          <br>
+          <input type="password" class="form-control" name="password" required>
+          <br>
+
+          <label>Повторите пароль</label>
+          <br>
+          <input type="password" class="form-control" name="password_repeat" required>
+          <br>
+
+          <label>E-mail</label>
+          <br>
+          <input type="email" required class="form-control" name="email">
+          <br>
+
+          <label>Номер телефона</label>
+          <br>
+          <input type="text" required class="form-control" name="phone">
+          <br>
+
+
+          <div class="form-group">
+            <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
+          </div>
+          </div>
+        </form>
+    </div>
+<div class="col">
+    </div>
+</row>
+</div>
+{% endblock %}
+

@@ -12,19 +12,83 @@
 
     <div class="container">
 
+        {% if flag_name == 0 and flag_description == 0 %}
+        <h3>По Вашему запросу ничего не найдено</h3>
+        {% endif %}
 
-        {% for event in events %}
+        {% if flag_name == 1 %}
+        <h3>Найденые совпадения в названиях событий</h3>
+        {% for event in name_events %}
             <div class="row mb-3 container-fluid">
-            <div class="card container-fluid">
+            <div class="card container-fluid p-0">
             <div class="card-header">
     {{ event.name }}
   </div>
   <div class="card-body">
-    Тип: {{ event.ID_type_event.name }}
+    <p class="font-weight-bold">Тип: {{ event.ID_type_event.name }}</p>
+   {% if event.id_type_exhibition.name == 'постоянная экспозиция' %}
+              <p class="card-text">{{ event.id_type_exhibition.name }}</p>
+                {% elif event.id_type_exhibition.name == 'временная экспозиция' %}
+                <p class="card-text">с {{ event.data_begin|date:"d E" }} - по {{ event.data_end|date:"d E" }}</p>
+                {% else %}
+                <p class="card-text">{{ event.data_begin }} {{ event.time_begin }}</p>
+                {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'event_detail' event_id=event.ID_event  %}">
+                        Посмотреть</a>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Забронировать</button>
+                </div>
+                  {% if event.isfree == True %}
+                <small class="text-muted">бесплатно</small>
+                  {% else %}
+                  <small class="text-muted">{{ event.ticket_price }} руб.</small>
+                  {% endif %}
+              </div>
   </div>
 </div>
     </div>
           {% endfor %}
+    {% endif %}
+
+        {% if flag_description == 1 %}
+        <h3>Найденые совпадения в описаниях событий</h3>
+        {% for event in description_events %}
+            <div class="row mb-3 container-fluid">
+            <div class="card container-fluid p-0">
+            <div class="card-header">
+    {{ event.name }}
+  </div>
+  <div class="card-body">
+    <p class="font-weight-bold">Тип: {{ event.ID_type_event.name }}</p>
+   {% if event.id_type_exhibition.name == 'постоянная экспозиция' %}
+              <p class="card-text">{{ event.id_type_exhibition.name }}</p>
+                {% elif event.id_type_exhibition.name == 'временная экспозиция' %}
+                <p class="card-text">с {{ event.data_begin }} - по {{ event.data_end }}</p>
+                {% else %}
+                <p class="card-text">с {{ event.data_begin|date:"d E" }} - по {{ event.data_end|date:"d E" }}</p>
+                {% endif %}
+      <p class="font-weight-bold">Описание: </p>
+      <p class="text-justify">{{ event.description }}</p>
+    <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'event_detail' event_id=event.ID_event  %}">
+                        Посмотреть</a>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Забронировать</button>
+                </div>
+                  {% if event.isfree == True %}
+                <small class="text-muted">бесплатно</small>
+                  {% else %}
+                  <small class="text-muted">{{ event.ticket_price }} руб.</small>
+                  {% endif %}
+              </div>
+  </div>
+</div>
+    </div>
+            {% endfor %}
+    {% endif %}
+
 
     </div>
 

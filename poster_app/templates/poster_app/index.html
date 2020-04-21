@@ -24,7 +24,7 @@
                 {% if event.id_type_exhibition.name == 'постоянная экспозиция' %}
               <p class="card-text">{{ event.id_type_exhibition.name }}</p>
                 {% elif event.id_type_exhibition.name == 'временная экспозиция' %}
-                <p class="card-text">с {{ event.data_begin }} - по {{ event.data_end }}</p>
+                <p class="card-text">с {{ event.data_begin|date:"d E" }} - по {{ event.data_end|date:"d E" }}</p>
                 {% else %}
                 <p class="card-text">{{ event.data_begin }} {{ event.time_begin }}</p>
                 {% endif %}

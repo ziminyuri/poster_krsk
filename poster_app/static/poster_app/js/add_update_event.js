@@ -26,6 +26,7 @@ $('#123').click(function(){
 	}
 });
 
+
 function changeType() {
 var eID = document.getElementById("exhibition_type");
 var exhibition_type = eID.options[eID.selectedIndex].text;
