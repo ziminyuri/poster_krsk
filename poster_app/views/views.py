@@ -2,7 +2,7 @@ import json
 
 from django.contrib import auth
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -383,7 +383,29 @@ def theater_update_detail(request, event_id: int):
     return render(request, "poster_app/event/theater/detail.html", {"event": event, 'name': name})
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def moderation(request):
     name = get_username(request)
-    events = Event.objects.all()
+    events = Event.objects.all().filter(id_event_status__name='Ожидает проверки')
+    return render(request, "poster_app/administrator/moderation.html", {"events": events, 'name': name})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def published(request):
+    name = get_username(request)
+    events = Event.objects.all().filter(id_event_status__name='Опубликовано')
+    return render(request, "poster_app/administrator/moderation.html", {"events": events, 'name': name})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def rejected(request):
+    name = get_username(request)
+    events = Event.objects.all().filter(id_event_status__name='Отклонено')
+    return render(request, "poster_app/administrator/moderation.html", {"events": events, 'name': name})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def archive(request):
+    name = get_username(request)
+    events = Event.objects.all().filter(id_event_status__name='Архив')
     return render(request, "poster_app/administrator/moderation.html", {"events": events, 'name': name})

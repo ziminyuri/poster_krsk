@@ -34,9 +34,9 @@ urlpatterns = [
     path("theater/<int:event_id>", views.theater_update_detail, name="theater_update_detail"),
 
     path("moderation", views.moderation, name="moderation"),
-    path("theater/<int:event_id>", views.theater_update_detail, name="theater_update_detail"),
-    path("theater/<int:event_id>", views.theater_update_detail, name="theater_update_detail"),
-    path("theater/<int:event_id>", views.theater_update_detail, name="theater_update_detail"),
+    path("published", views.published, name="published"),
+    path("rejected", views.rejected, name="rejected"),
+    path("archive", views.archive, name="archive"),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

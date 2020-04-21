@@ -1,0 +1,79 @@
+{% extends "poster_app/administrator/base.html" %}
+{% block content %}
+<main role="main">
+
+  <section class="jumbotron text-center">
+    <div class="container">
+        <h1>Опубликовано</h1>
+    </div>
+  </section>
+
+
+
+<div class="table-responsive">
+        <table class="table table-striped table-sm ml-2">
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th>Тип</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Подробнее</th>
+                <th>Редактировать</th>
+                <th>Удалить</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for event in events %}
+                <tr>
+                    <td>{{ event.name }}</td>
+                    <td>{{ event.ID_type_event.name }}</td>
+
+                    {% if event.id_type_exhibition.name == 'постоянная экспозиция' %}
+                    <td>{{ event.id_type_exhibition.name }}</td>
+                    {% elif event.id_type_exhibition.name == 'временная экспозиция' %}
+                    <td>{{ event.data_begin }} - {{ event.data_end }}</td>
+                    {% elif event.ID_type_event.name  == 'Конференция'%}
+                    <td>{{ event.data_begin }} - {{ event.data_end }}</td>
+                    {% else %}
+                    <td>{{ event.data_begin }} {{ event.time_begin }}</td>
+                    {% endif %}
+
+                    {% if event.id_event_status.name == 'Опубликовано' %}
+                        <td class="text-success">{{ event.id_event_status.name }}</td>
+                    {% elif event.id_event_status.name == 'Отклонено' %}
+                        <td class="text-danger">{{ event.id_event_status.name }}</td>
+                    {% elif event.id_event_status.name == 'Ожидает проверки' %}
+                        <td class="text-info">{{ event.id_event_status.name }}</td>
+                    {% else %}
+                        <td class="text-secondary">{{ event.id_event_status.name }}</td>
+                    {% endif %}
+
+                    <td>
+                        <a class="btn btn-outline-secondary btn-sm" href="{% url 'event_detail' event_id=event.ID_event  %}">
+                        Подробнее</a>
+                    </td>
+                    <td>
+                        <form action="{% url 'events' %}" method="POST">
+                            {% csrf_token %}
+                                    <input type="hidden" required class="form-control" name="_method" value = "PUT">
+                                    <input type="hidden" required class="form-control" name="event" value = "{{ event.ID_event}}">
+                                    <input type="hidden" required class="form-control" name="event_type" value = "{{ event.ID_type_event.name}}">
+                                    <input type="submit" class="btn btn-outline-secondary btn-sm" value="Редактировать" >
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{% url 'events' %}" method="POST">
+                            {% csrf_token %}
+                                    <input type="hidden" required class="form-control" name="_method" value = "DELETE">
+                                    <input type="hidden" required class="form-control" name="event" value = "{{ event.ID_event}}">
+                                    <input type="submit" class="btn btn-outline-danger btn-sm" value="Удалить" >
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}

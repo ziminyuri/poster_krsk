@@ -1,17 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Афиша Красноярска | Админинстратор</title>
-
-    {% load static %}
-    <link href="{% static 'poster_app/css/album.css'%}" rel="stylesheet">
-    <link href="{% static 'poster_app/css/carousel.css'%}" rel="stylesheet">
-    <link href="{% static 'poster_app/css/poster_krsk.css'%}" rel="stylesheet">
-    <link href="{% static 'poster_app/css/bootstrap.min.css' %}" rel="stylesheet"  type="text/css" />
-
-</head>
-<body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -51,16 +37,13 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'moderation' %}">Модерация</a>
+          <a class="nav-link" href="{% url 'profile' %}">Профиль</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'published' %}">Опубликовано</a>
+          <a class="nav-link" href="{% url 'events' %}">Мероприятия</a>
         </li>
           <li class="nav-item">
-          <a class="nav-link" href="{% url 'rejected' %}">Отклонено</a>
-          </li>
-          <li class="nav-item">
-          <a class="nav-link" href="{% url 'archive' %}">Архив</a>
+          <a class="nav-link" href="{% url 'booking' %}">Бронирования</a>
           </li>
       </ul>
 
@@ -89,24 +72,3 @@
   </nav>
 
 </header>
-{% block content %}
-
-{% endblock %}
-<footer id="fot" class="text-muted">
-  <div class="container">
-    <p class="float-right">
-      <a href="#">Наверх</a>
-    </p>
-    <p>Афиша Красноярска &copy; 2020</p>
-  </div>
-</footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script src="{% static 'poster_app/js/auth.js' %}"></script>
-
-{% block script %}
-{% endblock %}
-
-</body>
-</html>

@@ -12,84 +12,11 @@
 
 </head>
 <body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <div class="modal-body">
-
-        <form role="form" action="{% url 'auth_user' %}" method="POST" id="auth_block">
-            {% csrf_token %}
-<h1 class="h5 mb-3 font-weight-normal">Войти в личный кабинет</h1>
-    <label for="inputUsername" class="sr-only">Имя пользователя</label>
-    <input type="text" id="inputUsername" class="form-control" placeholder="Имя пользователя" required autofocus
-           name="username">
-    <label for="inputPassword" class="sr-only">Пароль</label>
-    <input type="password" id="inputPassword" class="form-control mt-3 mb-3" placeholder="Пароль" required name="password">
-    <p class="error_auth_label mt-3 mb-3"></p>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
-             <p class="mt-3 mb-3 auth_label">или</p>
-            <button class="btn btn-outline-primary btn-block" >Регистрация</button>
-        </form>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-<header>
-
-
-
-
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-    <a class="navbar-brand" href="{% url 'index' %}">Афиша Красноярска</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'profile' %}">Профиль</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'events' %}">Мероприятия</a>
-        </li>
-          <li class="nav-item">
-          <a class="nav-link" href="{% url 'booking' %}">Бронирования</a>
-          </li>
-      </ul>
-
-        {% if name == None %}
-        <button type="button" class="btn btn-outline-light ml-lg-5 my-2" data-toggle="modal"
-                      data-target="#myModal">
-                  Войти в личный кабинет
-              </button>
-        {% else %}
-            <ul class="navbar-nav mr-5">
-        <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Привет, {{ name }}!
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="{% url 'profile' %}">Профиль</a>
-            <a class="dropdown-item" href="{% url 'events' %}">Мои события</a>
-            <a class="dropdown-item" href="{% url 'booking' %}">Мои бронирования</a>
-            <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="{% url 'logout_view' %}">Выйти</a>
-        </div>
-      </li>
-        </ul>
-        {% endif %}
-    </div>
-  </nav>
-
-</header>
+{% include 'poster_app/user/header.html' %}
 {% block content %}
 
 {% endblock %}
-<footer class="text-muted">
+<footer id="fot" class="text-muted">
   <div class="container">
     <p class="float-right">
       <a href="#">Наверх</a>
