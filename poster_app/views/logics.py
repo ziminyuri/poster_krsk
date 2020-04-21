@@ -217,3 +217,13 @@ def update_event(request, data, event_id, type):
                 time_end=time_end,
                 id_type_exhibition=exhibition_type
             )
+
+
+def get_username(request):
+    if request.user.is_authenticated:
+        userprofile = UserProfile.objects.all().filter(user=request.user).first()
+        name = userprofile.name
+    else:
+        name = None
+
+    return name

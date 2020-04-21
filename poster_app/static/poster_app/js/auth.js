@@ -18,7 +18,7 @@ $("#auth_block").submit(function (event) {
                 }
 
                 else {
-                    window.location = "http://127.0.0.1:8000/events"
+                    window.location = "http://127.0.0.1:8000"
                 }
             }
     });

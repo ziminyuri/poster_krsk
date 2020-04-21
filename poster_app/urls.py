@@ -12,6 +12,7 @@ urlpatterns = [
     path("theater/all", views.index_theater, name="index_theater"),
 
     path("auth_user", views.auth_user, name="auth_user"),
+    path('logout', views.logout_view, name='logout_view'),
     path("search", views.search, name="search"),
     path("registration", views.registration, name="registration"),
 
