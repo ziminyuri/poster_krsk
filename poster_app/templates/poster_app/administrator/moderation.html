@@ -1,44 +1,13 @@
-{% extends "poster_app/user/base.html" %}
+{% extends "poster_app/administrator/base.html" %}
 {% block content %}
-
 <main role="main">
-
-<div id="AddEventModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <div class="modal-body">
-
-          <form role="form" action="{% url 'events' %}" method="POST">
-              {% csrf_token %}
-              <h1 class="h5 mb-3 font-weight-normal">Выберите тип события</h1>
-              <input type="hidden" required class="form-control" name="_method" id="_method" value = "POST">
-
-              <select id="RequestType" class="form-control" name="event_type" id="event_type">
-                  {% for type in event_types %}
-                      <option selected value= "{{ type.name }}">
-                          {{ type.name }}
-                      </option>
-                  {% endfor %}
-              </select>
-                <br>
-              <button class="btn btn-info btn-block" type="submit">Добавить</button>
-
-          </form>
-
-      </div>
-    </div>
-  </div>
-</div>
 
   <section class="jumbotron text-center">
     <div class="container">
-        <h1>Мои события</h1>
+        <h1>Ожидает проверки</h1>
     </div>
   </section>
 
-    <button type="button" class="btn btn-outline-info mb-2 ml-2 pl-4 pr-4" data-toggle="modal"
-                      data-target="#AddEventModal">Добавить</button>
 
 
 <div class="table-responsive">

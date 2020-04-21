@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from poster_app.models import *
-from poster_app.views.logics import update_event, add_event, get_username
+from poster_app.views.logics import update_event, add_event, get_username, is_admin
 from django.contrib.auth import logout
 
 
@@ -16,57 +16,65 @@ def index(request):
     events = Event.objects.all().filter(id_event_status__name='Опубликовано')
 
     name = get_username(request)
+    flag_admin = is_admin(request)
 
     return render(
-        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name}
+        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name,
+                                           'admin': flag_admin}
     )
 
 
 def index_concert(request):
     title = 'Концерты'
     name = get_username(request)
+    flag_admin = is_admin(request)
 
     events = Event.objects.all().filter(id_event_status__name='Опубликовано')
     events = events.filter(ID_type_event__name='Концерт')
 
     return render(
-        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name}
+        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name,
+                                           'admin': flag_admin}
     )
 
 
 def index_conference(request):
     title = 'Конференции'
     name = get_username(request)
+    flag_admin = is_admin(request)
 
     events = Event.objects.all().filter(id_event_status__name='Опубликовано')
     events = events.filter(ID_type_event__name='Конференция')
 
     return render(
-        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name}
+        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name,
+                                           'admin': flag_admin}
     )
 
 
 def index_exhibition(request):
     title = 'Выставки'
     name = get_username(request)
+    flag_admin = is_admin(request)
 
     events = Event.objects.all().filter(id_event_status__name='Опубликовано')
     events = events.filter(ID_type_event__name='Выставка')
 
     return render(
-        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name}
+        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name,'admin': flag_admin}
     )
 
 
 def index_theater(request):
     title = 'Театр'
     name = get_username(request)
+    flag_admin = is_admin(request)
 
     events = Event.objects.all().filter(id_event_status__name='Опубликовано')
     events = events.filter(ID_type_event__name=title)
 
     return render(
-        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name}
+        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name,'admin': flag_admin}
     )
 
 
@@ -78,7 +86,8 @@ def auth_user(request):
 
         if user is not None:
             auth.login(request, user)
-            return HttpResponse(json.dumps("Sign in"), content_type="application/json")
+            if user.is_superuser:
+                return HttpResponse(json.dumps("Sign in superuser"), content_type="application/json")
 
         else:
             return HttpResponse(
@@ -130,6 +139,8 @@ def registration(request):
 
 def search(request):
     name = get_username(request)
+    flag_admin = is_admin(request)
+
     flag_name = 0
     flag_description = 0
 
@@ -158,7 +169,7 @@ def search(request):
     return render(
         request, "poster_app/search.html", {"name_events": name_events, 'description_events': description_events,
                                             'flag_name': flag_name, 'flag_description': flag_description,
-                                            'name': name}
+                                            'name': name, 'admin': flag_admin}
     )
 
 @login_required
@@ -370,3 +381,9 @@ def theater_update_detail(request, event_id: int):
 
     event = get_object_or_404(Event, ID_event=event_id)
     return render(request, "poster_app/event/theater/detail.html", {"event": event, 'name': name})
+
+
+def moderation(request):
+    name = get_username(request)
+    events = Event.objects.all()
+    return render(request, "poster_app/administrator/moderation.html", {"events": events, 'name': name})

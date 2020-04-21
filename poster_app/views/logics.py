@@ -227,3 +227,15 @@ def get_username(request):
         name = None
 
     return name
+
+
+def is_admin(request) -> bool:
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            flag: bool = True
+        else:
+            flag: bool = False
+    else:
+        flag: bool = 0
+
+    return flag
