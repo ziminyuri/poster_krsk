@@ -25,7 +25,3 @@ $("#auth_block").submit(function (event) {
 });
 
 
-$("#registration").click(function() {
-      alert('регистрация');
-      console.log('регистрация');
-   });

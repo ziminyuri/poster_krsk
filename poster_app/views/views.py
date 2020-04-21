@@ -1,6 +1,7 @@
 import json
 
 from django.contrib import auth
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -80,6 +81,39 @@ def auth_user(request):
 
 
 def registration(request):
+    if request.is_ajax():
+        if request.POST:
+            name = request.POST["name"]
+            surname = request.POST["surname"]
+            login = request.POST["login"]
+            password = request.POST["password"]
+            password_repeat = request.POST["password_repeat"]
+            email = request.POST["email"]
+            phone = request.POST["phone"]
+
+            if password != password_repeat:
+                return HttpResponse(json.dumps("Пароли не совпадают"), content_type="application/json")
+
+            user = User.objects.all().filter(username=login).first()
+            if user:
+                return HttpResponse(json.dumps("Логин занят. Попробуйте другой"), content_type="application/json")
+
+            else:
+                print('Надо создать пользователя')
+                User.objects.create_user(login, email, password)
+
+                user = auth.authenticate(username=login, password=password)
+                UserProfile.objects.create(
+                    user=user,
+                    name=name,
+                    surname=surname,
+                    email=email,
+                    phone=phone,
+                )
+
+                return HttpResponse(json.dumps("Success"), content_type="application/json")
+
+    print('dsf')
     return render(request, "poster_app/registration.html")
 
 

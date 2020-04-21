@@ -11,7 +11,7 @@
     <div class="col">
     </div>
 <div class="col-6">
-        <form action="{% url 'registration'  %}" method="POST">
+        <form role="form" action="{% url 'registration'  %}" method="POST" id="registration_block">
 
             {% csrf_token %}
           <div class="form-group">
@@ -51,7 +51,7 @@
           <br>
           <input type="text" required class="form-control" name="phone">
           <br>
-
+              <p class="error_auth_label mt-3 mb-3"></p>
 
           <div class="form-group">
             <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
@@ -63,5 +63,10 @@
     </div>
 </row>
 </div>
+{% endblock %}
+
+{% block script%}
+    {% load static %}
+<script src="{% static 'poster_app/js/registration.js' %}"></script>
 {% endblock %}
 
