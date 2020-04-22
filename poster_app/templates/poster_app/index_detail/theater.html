@@ -1,0 +1,50 @@
+{% extends "poster_appbase.html" %}
+{% block content %}
+
+    <section class="jumbotron text-center">
+    <div class="container">
+        <h1>Информация о театральной постановке</h1>
+    </div>
+  </section>
+<div class="container">
+<row>
+    <div class="col">
+    </div>
+<div class="col-6">
+        <form>
+            {% csrf_token %}
+          <div class="form-group">
+              <img src="{{ event.img }}" class="card-img-top">
+
+          <br><br>
+          <h3>{{ event.name }}</h3>
+          <br>
+          <label class="font-weight-bold">Описание</label>
+          <br>
+          <p class="text-justify">{{ event.description }}</p>
+              <br>
+              <label class="font-weight-bold">Адрес</label>
+          <p>{{ event.address }}</p>
+
+            <label class="font-weight-bold">Дата</label>
+          <br>
+               <p>{{ event.data_begin }}</p>
+          <label class="font-weight-bold">Время начала</label>
+          <br>
+              <p>{{ event.time_begin }}</p>
+          <label class="font-weight-bold">Стоимость билета</label>
+          <br>
+              {% if event.isfree == True %}
+              <p>Бесплатно</p>
+              {% else %}
+              <p>{{ event.ticket_price }}</p>
+              {% endif %}
+          </div>
+
+        </form>
+    </div>
+<div class="col">
+    </div>
+</row>
+</div>
+{% endblock %}

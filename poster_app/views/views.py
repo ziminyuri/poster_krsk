@@ -24,6 +24,22 @@ def index(request):
     )
 
 
+def index_detail(request, event_id: int):
+    event = get_object_or_404(Event, ID_event=event_id)
+
+    if event.ID_type_event.name == "Выставка":
+        return redirect("index_exhibition_detail", event_id=event_id)
+
+    elif event.ID_type_event.name == "Концерт":
+        return redirect("index_concert_detail", event_id=event_id)
+
+    elif event.ID_type_event.name == "Конференция":
+        return redirect("index_conference_detail", event_id=event_id)
+
+    elif event.ID_type_event.name == "Театр":
+        return redirect("index_theater_detail", event_id=event_id)
+
+
 def index_concert(request):
     title = 'Концерты'
     name = get_username(request)
@@ -36,6 +52,12 @@ def index_concert(request):
         request, "poster_app/index.html", {"events": events, 'title': title, 'name': name,
                                            'admin': flag_admin}
     )
+
+
+def index_concert_detail(request, event_id: int):
+    name = get_username(request)
+    event = get_object_or_404(Event, ID_event=event_id)
+    return render(request, "poster_app/index_detail/concert.html", {"event": event, 'name': name})
 
 
 def index_conference(request):
@@ -52,6 +74,12 @@ def index_conference(request):
     )
 
 
+def index_conference_detail(request, event_id: int):
+    name = get_username(request)
+    event = get_object_or_404(Event, ID_event=event_id)
+    return render(request, "poster_app/index_detail/conference.html", {"event": event, 'name': name})
+
+
 def index_exhibition(request):
     title = 'Выставки'
     name = get_username(request)
@@ -65,6 +93,12 @@ def index_exhibition(request):
     )
 
 
+def index_exhibition_detail(request, event_id: int):
+    name = get_username(request)
+    event = get_object_or_404(Event, ID_event=event_id)
+    return render(request, "poster_app/index_detail/exhibition.html", {"event": event, 'name': name})
+
+
 def index_theater(request):
     title = 'Театр'
     name = get_username(request)
@@ -76,6 +110,12 @@ def index_theater(request):
     return render(
         request, "poster_app/index.html", {"events": events, 'title': title, 'name': name,'admin': flag_admin}
     )
+
+
+def index_theater_detail(request, event_id: int):
+    name = get_username(request)
+    event = get_object_or_404(Event, ID_event=event_id)
+    return render(request, "poster_app/index_detail/theater.html", {"event": event, 'name': name})
 
 
 def auth_user(request):
@@ -271,6 +311,7 @@ def booking(request):
     return render(request, "poster_app/user/booking.html", {'name': name})
 
 
+@login_required
 def concert(request):
     name = get_username(request)
     if request.method == "POST":
@@ -284,6 +325,7 @@ def concert(request):
     return render(request, "poster_app/event/concert/add.html", {'name': name})
 
 
+@login_required
 def concert_update_detail(request, event_id: int):
     name = get_username(request)
 
@@ -298,6 +340,7 @@ def concert_update_detail(request, event_id: int):
     return render(request, "poster_app/event/concert/detail.html", {"event": event, 'name': name})
 
 
+@login_required
 def conference(request):
     name = get_username(request)
     if request.method == "POST":
@@ -310,6 +353,7 @@ def conference(request):
     return render(request, "poster_app/event/conference/add.html", {'name': name})
 
 
+@login_required
 def conference_update_detail(request, event_id: int):
     name = get_username(request)
 
@@ -324,6 +368,7 @@ def conference_update_detail(request, event_id: int):
     return render(request, "poster_app/event/conference/detail.html", {"event": event, 'name': name})
 
 
+@login_required
 def exhibition(request):
     name = get_username(request)
 
@@ -342,6 +387,7 @@ def exhibition(request):
     )
 
 
+@login_required
 def exhibition_update_detail(request, event_id: int):
     name = get_username(request)
 
@@ -356,6 +402,7 @@ def exhibition_update_detail(request, event_id: int):
     return render(request, "poster_app/event/exhibition/detail.html", {"event": event, 'name': name})
 
 
+@login_required
 def theater(request):
     name = get_username(request)
 
@@ -369,6 +416,7 @@ def theater(request):
     return render(request, "poster_app/event/theater/add.html", {'name': name})
 
 
+@login_required
 def theater_update_detail(request, event_id: int):
     name = get_username(request)
 
@@ -409,3 +457,48 @@ def archive(request):
     name = get_username(request)
     events = Event.objects.all().filter(id_event_status__name='Архив')
     return render(request, "poster_app/administrator/moderation.html", {"events": events, 'name': name})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_detail(request, event_id: int):
+    event = get_object_or_404(Event, ID_event=event_id)
+
+    if event.ID_type_event.name == "Выставка":
+        return redirect("admin_exhibition_detail", event_id=event_id)
+
+    elif event.ID_type_event.name == "Концерт":
+        return redirect("admin_concert_detail", event_id=event_id)
+
+    elif event.ID_type_event.name == "Конференция":
+        return redirect("admin_conference_detail", event_id=event_id)
+
+    elif event.ID_type_event.name == "Театр":
+        return redirect("admin_theater_detail", event_id=event_id)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_concert_detail(request, event_id: int):
+    name = get_username(request)
+    event = get_object_or_404(Event, ID_event=event_id)
+    return render(request, "poster_app/administrator/detail/concert.html", {"event": event, 'name': name})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_conference_detail(request, event_id: int):
+    name = get_username(request)
+    event = get_object_or_404(Event, ID_event=event_id)
+    return render(request, "poster_app/administrator/detail/conference.html", {"event": event, 'name': name})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_exhibition_detail(request, event_id: int):
+    name = get_username(request)
+    event = get_object_or_404(Event, ID_event=event_id)
+    return render(request, "poster_app/administrator/detail/exhibition.html", {"event": event, 'name': name})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_theater_detail(request, event_id: int):
+    name = get_username(request)
+    event = get_object_or_404(Event, ID_event=event_id)
+    return render(request, "poster_app/administrator/detail/theater.html", {"event": event, 'name': name})

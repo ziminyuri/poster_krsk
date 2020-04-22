@@ -1,0 +1,54 @@
+{% extends "poster_app/base.html" %}
+{% block content %}
+
+    <section class="jumbotron text-center">
+    <div class="container">
+        <h1>Информация о конференции</h1>
+    </div>
+  </section>
+<div class="container">
+<row>
+    <div class="col">
+    </div>
+<div class="col-6">
+        <form>
+            {% csrf_token %}
+          <div class="form-group">
+              <img src="{{ event.img }}" class="card-img-top">
+          <br><br>
+          <label>Название</label>
+          <br>
+          <p>{{ event.name }}</p>
+          <label>Описание</label>
+          <br>
+          <p>{{ event.description }}</p>
+              <label>Адрес</label>
+          <p>{{ event.address }}</p>
+              <label>Дата начала</label>
+          <br>
+              <p>{{ event.data_begin }}</p>
+          <label>Дата окончания</label>
+          <br>
+               <p>{{ event.data_end }}</p>
+          <label>Время начала</label>
+          <br>
+              <p>{{ event.time_begin }}</p>
+          <label>Время окончания</label>
+          <br>
+               <p>{{ event.time_end }}</p>
+          <label>Стоимость билета</label>
+          <br>
+              {% if event.isfree == True %}
+              <p>Бесплатно</p>
+              {% else %}
+              <p>{{ event.ticket_price }}</p>
+              {% endif %}
+          </div>
+
+        </form>
+    </div>
+<div class="col">
+    </div>
+</row>
+</div>
+{% endblock %}

@@ -6,10 +6,15 @@ from .views import views
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("detail/<int:event_id>", views.index_detail, name="index_detail"),
     path("concert/all", views.index_concert, name="index_concert"),
     path("conference/all", views.index_conference, name="index_conference"),
     path("exhibition/all", views.index_exhibition, name="index_exhibition"),
     path("theater/all", views.index_theater, name="index_theater"),
+    path("index/concert/<int:event_id>", views.index_concert_detail, name="index_concert_detail"),
+    path("index/conference/<int:event_id>", views.index_conference_detail, name="index_conference_detail"),
+    path("index/exhibition/<int:event_id>", views.index_exhibition_detail, name="index_exhibition_detail"),
+    path("index/theater/<int:event_id>", views.index_theater_detail, name="index_theater_detail"),
 
     path("auth_user", views.auth_user, name="auth_user"),
     path('logout', views.logout_view, name='logout_view'),
@@ -37,6 +42,12 @@ urlpatterns = [
     path("published", views.published, name="published"),
     path("rejected", views.rejected, name="rejected"),
     path("archive", views.archive, name="archive"),
+    path("admin/detail/<int:event_id>", views.admin_detail, name="admin_detail"),
+    path("admin/concert/<int:event_id>", views.admin_concert_detail, name="admin_concert_detail"),
+    path("admin/conference/<int:event_id>",views.admin_conference_detail, name="admin_conference_detail"),
+    path("admin/exhibition/<int:event_id>", views.admin_exhibition_detail, name="admin_exhibition_detail"),
+    path("admin/theater/<int:event_id>", views.admin_theater_detail, name="admin_theater_detail"),
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()
