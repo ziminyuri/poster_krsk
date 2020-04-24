@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from poster_app.models import *
-from poster_app.views.logics import update_event, add_event, get_username, is_admin
+from poster_app.views.logics import update_event, add_event, get_username, is_admin, admin_update
 from django.contrib.auth import logout
 
 
@@ -126,8 +126,7 @@ def auth_user(request):
 
         if user is not None:
             auth.login(request, user)
-            if user.is_superuser:
-                return HttpResponse(json.dumps("Sign in superuser"), content_type="application/json")
+            return HttpResponse(json.dumps("Sign in superuser"), content_type="application/json")
 
         else:
             return HttpResponse(
@@ -171,14 +170,13 @@ def registration(request):
                     email=email,
                     phone=phone,
                 )
-
+                auth.login(request, user)
                 return HttpResponse(json.dumps("Success"), content_type="application/json")
 
     return render(request, "poster_app/registration.html", {'name': name})
 
 
 def search(request):
-    name = get_username(request)
     flag_admin = is_admin(request)
 
     flag_name = 0
@@ -206,6 +204,7 @@ def search(request):
                 description_events.append(event)
                 flag_description = 1
 
+    name = get_username(request)
     return render(
         request, "poster_app/search.html", {"name_events": name_events, 'description_events': description_events,
                                             'flag_name': flag_name, 'flag_description': flag_description,
@@ -241,28 +240,26 @@ def events(request):
             event_type: str = data["event_type"]
             event_id: int = int(data["event"])
             event = get_object_or_404(Event, ID_event=event_id)
-            description_len: str = str(2000 - len(event.description))
+            # description_len: str = str(2000 - len(event.description))
 
             if event_type == "Выставка":
                 exhibition_types = TypeExhibition.objects.all()
                 return render(
                     request,
                     "poster_app/event/exhibition/update.html",
-                    {"exhibition_types": exhibition_types, "event": event, "description_len": description_len,
+                    {"exhibition_types": exhibition_types, "event": event,
                      'name': name},
                 )
 
             elif event_type == "Театр":
                 return render(
                     request, "poster_app/event/theater/update.html", {"event": event,
-                                                                      "description_len": description_len,
                                                                       'name': name}
                 )
 
             elif event_type == "Концерт":
                 return render(
                     request, "poster_app/event/concert/update.html", {"event": event,
-                                                                      "description_len": description_len,
                                                                       'name': name
                                                                       }
                 )
@@ -270,7 +267,6 @@ def events(request):
             elif event_type == "Конференция":
                 return render(
                     request, "poster_app/event/conference/update.html", {"event": event,
-                                                                         "description_len": description_len,
                                                                          'name': name}
                 )
 
@@ -280,13 +276,19 @@ def events(request):
             event_obj.delete()
             return redirect("events")
 
-    events_list = Event.objects.all()
+    userprofile = UserProfile.objects.all().filter(user=request.user).first()
+    events_list = Event.objects.all().filter(ID_user_profile=userprofile)
     event_types = TypeEvent.objects.all()
+
+    if events_list:
+        flag_event = True
+    else:
+        flag_event = False
+
     return render(
         request,
         "poster_app/user/events.html",
-        {"events": events_list, "event_types": event_types, 'name': name},
-    )
+        {"events": events_list, "event_types": event_types, 'name': name, 'flag_event': flag_event})
 
 
 def event_detail(request, event_id: int):
@@ -442,21 +444,21 @@ def moderation(request):
 def published(request):
     name = get_username(request)
     events = Event.objects.all().filter(id_event_status__name='Опубликовано')
-    return render(request, "poster_app/administrator/moderation.html", {"events": events, 'name': name})
+    return render(request, "poster_app/administrator/published.html", {"events": events, 'name': name})
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def rejected(request):
     name = get_username(request)
     events = Event.objects.all().filter(id_event_status__name='Отклонено')
-    return render(request, "poster_app/administrator/moderation.html", {"events": events, 'name': name})
+    return render(request, "poster_app/administrator/rejected.html", {"events": events, 'name': name})
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def archive(request):
     name = get_username(request)
     events = Event.objects.all().filter(id_event_status__name='Архив')
-    return render(request, "poster_app/administrator/moderation.html", {"events": events, 'name': name})
+    return render(request, "poster_app/administrator/archive.html", {"events": events, 'name': name})
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -478,27 +480,134 @@ def admin_detail(request, event_id: int):
 
 @user_passes_test(lambda u: u.is_superuser)
 def admin_concert_detail(request, event_id: int):
-    name = get_username(request)
-    event = get_object_or_404(Event, ID_event=event_id)
-    return render(request, "poster_app/administrator/detail/concert.html", {"event": event, 'name': name})
+    if admin_update(request, event_id):
+        return redirect('moderation')
+    else:
+        name = get_username(request)
+        event = get_object_or_404(Event, ID_event=event_id)
+        return render(request, "poster_app/administrator/detail/concert.html", {"event": event, 'name': name})
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def admin_conference_detail(request, event_id: int):
-    name = get_username(request)
-    event = get_object_or_404(Event, ID_event=event_id)
-    return render(request, "poster_app/administrator/detail/conference.html", {"event": event, 'name': name})
+    if admin_update(request, event_id):
+        return redirect('moderation')
+    else:
+        name = get_username(request)
+        event = get_object_or_404(Event, ID_event=event_id)
+        return render(request, "poster_app/administrator/detail/conference.html", {"event": event, 'name': name})
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def admin_exhibition_detail(request, event_id: int):
-    name = get_username(request)
-    event = get_object_or_404(Event, ID_event=event_id)
-    return render(request, "poster_app/administrator/detail/exhibition.html", {"event": event, 'name': name})
+    flag_redirect = admin_update(request, event_id)
+    if flag_redirect is False:
+        name = get_username(request)
+        event = get_object_or_404(Event, ID_event=event_id)
+        return render(request, "poster_app/administrator/detail/exhibition.html", {"event": event, 'name': name})
+    elif flag_redirect == "Ожидает проверки":
+        return redirect('moderation')
+    elif flag_redirect == "Опубликовано":
+        return redirect('published')
+    elif flag_redirect == "Отклонено":
+        return redirect('rejected')
+    else:
+        return redirect('archive')
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def admin_theater_detail(request, event_id: int):
+    flag_redirect = admin_update(request, event_id)
+    if flag_redirect is False:
+        name = get_username(request)
+        event = get_object_or_404(Event, ID_event=event_id)
+        return render(request, "poster_app/administrator/detail/theater.html", {"event": event, 'name': name})
+    elif flag_redirect == "Ожидает проверки":
+        return redirect('moderation')
+    elif flag_redirect == "Опубликовано":
+        return redirect('published')
+    elif flag_redirect == "Отклонено":
+        return redirect('rejected')
+    else:
+        return redirect('archive')
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_concert_update(request, event_id: int):
+    flag_redirect = admin_update(request, event_id)
+    if flag_redirect is False:
+        name = get_username(request)
+        event = get_object_or_404(Event, ID_event=event_id)
+        return render(request, "poster_app/administrator/update/concert_update.html", {"event": event, 'name': name})
+    elif flag_redirect == "Ожидает проверки":
+        return redirect('moderation')
+    elif flag_redirect == "Опубликовано":
+        return redirect('published')
+    elif flag_redirect == "Отклонено":
+        return redirect('rejected')
+    else:
+        return redirect('archive')
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_conference_update(request, event_id: int):
+    flag_redirect = admin_update(request, event_id)
+    if flag_redirect is False:
+        name = get_username(request)
+        event = get_object_or_404(Event, ID_event=event_id)
+        return render(request, "poster_app/administrator/update/conference_update.html", {"event": event, 'name': name})
+    elif flag_redirect == "Ожидает проверки":
+        return redirect('moderation')
+    elif flag_redirect == "Опубликовано":
+        return redirect('published')
+    elif flag_redirect == "Отклонено":
+        return redirect('rejected')
+    else:
+        return redirect('archive')
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_events(request):
     name = get_username(request)
-    event = get_object_or_404(Event, ID_event=event_id)
-    return render(request, "poster_app/administrator/detail/theater.html", {"event": event, 'name': name})
+
+    if request.method == "POST":
+        data = request.POST
+
+        if data["_method"] == "PUT":
+            status = ['Опубликовано', 'Отклонено', 'Архив']
+            event_type: str = data["event_type"]
+            event_id: int = int(data["event"])
+            event = get_object_or_404(Event, ID_event=event_id)
+
+            if event_type == "Выставка":
+                return render(request, "poster_app/administrator/update/exhibition_update.html", {"event": event, 'name': name,
+                                                                                                  'status': status})
+
+            elif event_type == "Театр":
+                return render(request, "poster_app/administrator/update/exhibition_update.html", {"event": event,
+                                                                                                  'name': name,
+                                                                                                  'status': status})
+
+            elif event_type == "Концерт":
+                return render(request, "poster_app/administrator/update/concert_update.html",
+                              {"event": event, 'name': name, 'status': status})
+
+            elif event_type == "Конференция":
+                return render(request, "poster_app/administrator/update/conference_update.html",
+                              {"event": event, 'name': name, 'status': status})
+
+        elif data["_method"] == "DELETE":
+            event = data["event"]
+            event_obj = Event.objects.get(ID_event=event)
+            event = Event.objects.filter(ID_event=event).first()
+            old_status = event.id_event_status.name
+            event_obj.delete()
+
+            if old_status == 'Ожидает проверки':
+                return redirect("moderation")
+            elif old_status == 'Опубликовано':
+                return redirect('published')
+            elif old_status == 'Архив':
+                return redirect('archive')
+            else:
+                return redirect('rejected')

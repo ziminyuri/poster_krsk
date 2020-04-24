@@ -6,7 +6,7 @@
         <h1>Обновить выставку</h1>
     </div>
   </section>
-<div class="container">
+<div class="container" id="m_content">
 <row>
     <div class="col">
     </div>
@@ -24,9 +24,9 @@
 
           <label>Описание</label>
           <br>
-          <textarea class="form-control" id="description" rows="4" name="description">{{ event.description }}
+          <textarea class="form-control" id="description" rows="4" name="description" maxlength="2000">{{ event.description }}
           </textarea>
-           <div class="counter">Осталось символов: <span id="counter">{{ description_len }}</span></div>
+
           <br>
 
           <label>Адрес</label>
@@ -40,7 +40,7 @@
             onchange="changeType()">
                 {% for exhibition_type in exhibition_types %}
 
-                    {% if exhibition_type.id_type_exhibition == event.id_type_exhibition %}
+                    {% if exhibition_type.id_type_exhibition == event.id_type_exhibition.id_type_exhibition %}
                 <option value="{{ exhibition_type.id_type_exhibition }}" selected="selected">
                 {{ exhibition_type.name }}
                 </option>

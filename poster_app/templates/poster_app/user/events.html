@@ -30,7 +30,7 @@
     </div>
   </div>
 </div>
-
+{% if flag_event == True %}
   <section class="jumbotron text-center">
     <div class="container">
         <h1>Мои события</h1>
@@ -41,7 +41,8 @@
                       data-target="#AddEventModal">Добавить</button>
 
 
-<div class="table-responsive">
+
+<div class="table-responsive" id="m_content">
         <table class="table table-striped table-sm ml-2">
             <thead>
             <tr>
@@ -106,5 +107,17 @@
             </tbody>
         </table>
     </div>
+{% else %}
+<section class="jumbotron text-center">
+    <div class="container">
+      <h1>Мои события</h1>
+      <p class="lead text-muted">Создайте свое первое событие!</p>
+      <p>
+        <button type="button" class="btn btn-outline-info mb-2 ml-2 pl-4 pr-4" data-toggle="modal"
+                      data-target="#AddEventModal">Добавить</button>
+      </p>
+    </div>
+  </section>
+{% endif %}
 </main>
 {% endblock %}

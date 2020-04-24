@@ -10,7 +10,7 @@
   </section>
 {% load static %}
 
-    <div class="container">
+    <div class="container" id="m_content">
 
         {% if flag_name == 0 and flag_description == 0 %}
         <h3>По Вашему запросу ничего не найдено</h3>
@@ -36,7 +36,7 @@
 
     <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'event_detail' event_id=event.ID_event  %}">
+                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'index_detail' event_id=event.ID_event  %}">
                         Посмотреть</a>
                   <button type="button" class="btn btn-sm btn-outline-secondary">Забронировать</button>
                 </div>
@@ -65,10 +65,11 @@
    {% if event.id_type_exhibition.name == 'постоянная экспозиция' %}
               <p class="card-text">{{ event.id_type_exhibition.name }}</p>
                 {% elif event.id_type_exhibition.name == 'временная экспозиция' %}
-                <p class="card-text">с {{ event.data_begin }} - по {{ event.data_end }}</p>
-                {% else %}
                 <p class="card-text">с {{ event.data_begin|date:"d E" }} - по {{ event.data_end|date:"d E" }}</p>
+                {% else %}
+                <p class="card-text">{{ event.data_begin }} {{ event.time_begin }}</p>
                 {% endif %}
+
       <p class="font-weight-bold">Описание: </p>
       <p class="text-justify">{{ event.description }}</p>
     <div class="d-flex justify-content-between align-items-center">

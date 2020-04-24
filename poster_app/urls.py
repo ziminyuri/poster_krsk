@@ -47,6 +47,7 @@ urlpatterns = [
     path("admin/conference/<int:event_id>",views.admin_conference_detail, name="admin_conference_detail"),
     path("admin/exhibition/<int:event_id>", views.admin_exhibition_detail, name="admin_exhibition_detail"),
     path("admin/theater/<int:event_id>", views.admin_theater_detail, name="admin_theater_detail"),
+    path("admin/update", views.admin_events, name="admin_events"),
 
 ]
 

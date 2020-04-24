@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from poster_app.models import UserProfile, EventStatus, Event, TypeEvent, TypeExhibition
 from poster_app.views.image import image_to_db
+from django.shortcuts import redirect
 
 
 def add_event(request, data, type):
@@ -239,3 +240,19 @@ def is_admin(request) -> bool:
         flag: bool = 0
 
     return flag
+
+
+def admin_update(request, event_id):
+    if request.method == "POST":
+        data = request.POST
+
+        if data["_method"] == "PUT":
+            status = data["status"]
+            status = get_object_or_404(EventStatus, name=status)
+            event = Event.objects.filter(ID_event=event_id).first()
+            old_status = event.id_event_status.name
+            Event.objects.filter(ID_event=event_id).update(id_event_status=status)
+
+            return old_status
+    else:
+        return False
