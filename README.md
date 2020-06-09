@@ -10,4 +10,7 @@ Login Information
 Superuser: sfu
 Password: red666
 
+User: petrov1
+Password : petrov
+
 

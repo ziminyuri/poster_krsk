@@ -10,6 +10,8 @@ from poster_app.models import *
 from poster_app.views.logics import update_event, add_event, get_username, is_admin, admin_update
 from django.contrib.auth import logout
 
+import datetime
+
 
 def index(request):
     title = 'События'
@@ -38,6 +40,37 @@ def index_detail(request, event_id: int):
 
     elif event.ID_type_event.name == "Театр":
         return redirect("index_theater_detail", event_id=event_id)
+
+
+def booking(request, event_id: int):
+    if request.POST:
+        booking_place = request.POST["booking_place_input"]
+        places_str = booking_place.split('Выбрано место: Ряд №')[1:]
+        for place in places_str:
+            row = place.split(' Место №')[0]
+            pl = place.split(' Место №')[1]
+            s = Setting.objects.all()[0]
+
+            now = datetime.datetime.now()
+            user = get_object_or_404(UserProfile, user=request.user)
+
+
+
+        return HttpResponse(json.dumps("Бронирование прошло успешно"), content_type="application/json")
+
+    else:
+        name = get_username(request)
+        rows = []
+        for i in range(1, 11):
+            rows.append(i)
+
+        places = []
+        for i in range(1, 21):
+            places.append(i)
+
+        event = get_object_or_404(Event, ID_event=event_id)
+
+        return render(request, "poster_app/booking.html", {'name': name, 'rows': rows, 'places': places, 'event': event})
 
 
 def index_concert(request):
@@ -89,7 +122,7 @@ def index_exhibition(request):
     events = events.filter(ID_type_event__name='Выставка')
 
     return render(
-        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name,'admin': flag_admin}
+        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name, 'admin': flag_admin}
     )
 
 
@@ -108,7 +141,7 @@ def index_theater(request):
     events = events.filter(ID_type_event__name=title)
 
     return render(
-        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name,'admin': flag_admin}
+        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name, 'admin': flag_admin}
     )
 
 
@@ -211,6 +244,7 @@ def search(request):
                                             'name': name, 'admin': flag_admin}
     )
 
+
 @login_required
 def profile(request):
     name = get_username(request)
@@ -308,9 +342,15 @@ def event_detail(request, event_id: int):
 
 
 @login_required
-def booking(request):
+def booking_user(request):
     name = get_username(request)
-    return render(request, "poster_app/user/booking.html", {'name': name})
+    return render(request, "poster_app/user/my_booking.html", {'name': name})
+
+
+@login_required
+def booking_list(request, event_id: int):
+    name = get_username(request)
+    return render(request, "poster_app/user/booking_list.html", {'name': name})
 
 
 @login_required
@@ -580,8 +620,9 @@ def admin_events(request):
             event = get_object_or_404(Event, ID_event=event_id)
 
             if event_type == "Выставка":
-                return render(request, "poster_app/administrator/update/exhibition_update.html", {"event": event, 'name': name,
-                                                                                                  'status': status})
+                return render(request, "poster_app/administrator/update/exhibition_update.html",
+                              {"event": event, 'name': name,
+                               'status': status})
 
             elif event_type == "Театр":
                 return render(request, "poster_app/administrator/update/exhibition_update.html", {"event": event,

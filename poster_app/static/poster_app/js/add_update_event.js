@@ -27,6 +27,19 @@ $('#123').click(function(){
 	}
 });
 
+function changeTickets() {
+var eID = document.getElementById("tickets-type");
+var tickets_type = eID.options[eID.selectedIndex].text;
+
+if (tickets_type === 'Место в зале'){
+    document.getElementById("label-number-of-tickets").classList.add('d-none');
+    document.getElementById("number-of-tickets").classList.add('d-none');
+}
+else {
+    document.getElementById("label-number-of-tickets").classList.remove('d-none');
+    document.getElementById("number-of-tickets").classList.remove('d-none');
+}
+}
 
 function changeType() {
 var eID = document.getElementById("exhibition_type");
@@ -46,3 +59,4 @@ else {
 }
 
 }
+

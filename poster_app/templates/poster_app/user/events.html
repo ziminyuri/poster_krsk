@@ -53,6 +53,7 @@
                 <th>Подробнее</th>
                 <th>Редактировать</th>
                 <th>Удалить</th>
+                <th>Список бронирования</th>
             </tr>
             </thead>
             <tbody>
@@ -101,6 +102,10 @@
                                     <input type="hidden" required class="form-control" name="event" value = "{{ event.ID_event}}">
                                     <input type="submit" class="btn btn-outline-danger btn-sm" value="Удалить" >
                         </form>
+                    </td>
+                <td>
+                        <a class="btn btn-outline-secondary btn-sm" href="{% url 'booking_list' event_id=event.ID_event  %}">
+                        Список бронирования</a>
                     </td>
                 </tr>
             {% endfor %}

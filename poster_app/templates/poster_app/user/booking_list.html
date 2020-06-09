@@ -1,0 +1,59 @@
+{% extends "poster_app/user/base.html" %}
+{% block content %}
+
+<main role="main">
+    <section class="jumbotron text-center">
+    <div class="container">
+        <h1>Список бронирования</h1>
+    </div>
+  </section>
+
+    <button type="button" class="btn btn-outline-info mb-2 ml-2 pl-4 pr-4">Скачать список</button>
+
+    <div class="table-responsive" id="m_content">
+        <table class="table table-striped table-sm ml-2">
+            <thead>
+            <tr>
+                <th>ФИО пользователя</th>
+                <th>Дата бронирования</th>
+                <th>Номер бронирования</th>
+                <th>Тип билета</th>
+                <th>Ряд</th>
+                <th>Место</th>
+                <th>Стоимость</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Иванов Дмитрий Петрович</td>
+                    <td>30.04.2020</td>
+                    <td>12</td>
+                    <td>Место в зале</td>
+                    <td>5</td>
+                    <td>15</td>
+                    <td>1400</td>
+                </tr>
+            <tr>
+                    <td>Близких Игорь Николаевич</td>
+                    <td>05.05.2020</td>
+                    <td>14</td>
+                    <td>Место в зале</td>
+                    <td>6</td>
+                    <td>17</td>
+                    <td>1400</td>
+                </tr>
+            <tr>
+                    <td>Кравченко Михаил Олегович</td>
+                    <td>06.05.2020</td>
+                    <td>17</td>
+                    <td>Место в зале</td>
+                    <td>1</td>
+                    <td>10</td>
+                    <td>1400</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</main>
+{% endblock %}

@@ -35,7 +35,7 @@
                 <div class="btn-group">
                     <a class="btn btn-sm btn-outline-secondary" href="{% url 'index_detail' event_id=event.ID_event  %}">
                         Посмотреть</a>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Забронировать</button>
+                   <a class="btn btn-sm btn-outline-secondary" href="{% url 'booking' event_id=event.ID_event  %}">Забронировать</a>
                 </div>
                   {% if event.isfree == True %}
                 <small class="text-muted">бесплатно</small>

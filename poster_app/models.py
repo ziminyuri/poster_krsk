@@ -5,6 +5,11 @@ from django.db import models
 User = get_user_model()
 
 
+class Setting(models.Model):
+    id_setting = models.AutoField(primary_key=True)
+    number_booking = models.IntegerField()
+
+
 class UserProfile(models.Model):
     ID_user_profile = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -54,6 +59,19 @@ class EventStatus(models.Model):
         return self.name
 
 
+class Booking(models.Model):
+    id_booking = models.AutoField(primary_key=True)
+    number = models.IntegerField()
+    date = models.DateField()
+    ID_user_profile = models.ForeignKey(UserProfile, models.DO_NOTHING)
+
+    class Meta:
+        db_table = "booking"
+
+    def __str__(self):
+        return self.number
+
+
 class Event(models.Model):
     ID_event = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
@@ -66,7 +84,8 @@ class Event(models.Model):
     time_end = models.TimeField(null=True, blank=True)
     isfree = models.BooleanField(default=True)
     ticket_price = models.CharField(max_length=15, null=True, blank=True)
-    number_of_tickets = models.CharField(max_length=7, null=True, blank=True)
+    number_of_tickets = models.IntegerField(null=True, blank=True)
+    number_of_tickets_booked = models.IntegerField(null=True, blank=True)
     ID_type_event = models.ForeignKey(TypeEvent, models.DO_NOTHING)
     ID_user_profile = models.ForeignKey(UserProfile, models.DO_NOTHING)
 
@@ -77,6 +96,25 @@ class Event(models.Model):
 
     class Meta:
         db_table = "event"
+
+    def __str__(self):
+        return self.name
+
+
+class Ticket(models.Model):
+    id_ticket = models.AutoField(primary_key=True)
+    row = models.IntegerField(null=True, blank=True)
+    place = models.IntegerField(null=True, blank=True)
+    entrance = models.BooleanField(default=True)
+    ticket_price = models.CharField(max_length=15, null=True, blank=True)
+    isfree = models.BooleanField(default=True)
+    name = models.CharField(max_length=20)
+    date = models.DateField()
+    ID_event = models.ForeignKey(Event, models.DO_NOTHING)
+    id_booking = models.ForeignKey(Booking, models.DO_NOTHING)
+
+    class Meta:
+        db_table = "ticket"
 
     def __str__(self):
         return self.name

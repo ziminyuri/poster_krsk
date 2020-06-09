@@ -1,0 +1,58 @@
+{% extends "poster_app/user/base.html" %}
+{% block content %}
+
+<main role="main">
+    <section class="jumbotron text-center">
+    <div class="container">
+        <h1>Мои бронирования</h1>
+    </div>
+  </section>
+
+    <div class="table-responsive" id="m_content">
+        <table class="table table-striped table-sm ml-2">
+            <thead>
+            <tr>
+                <th>Событие</th>
+                <th>Дата события</th>
+                <th>Номер бронирования</th>
+                <th>Тип билета</th>
+                <th>Ряд</th>
+                <th>Место</th>
+                <th>Стоимость</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                    <td>Воскресение на площади</td>
+                    <td>10.09.2020</td>
+                    <td>43</td>
+                    <td>Входной</td>
+                    <td></td>
+                    <td></td>
+                    <td>Бесплатно</td>
+                <td>
+                        <a class="btn btn-outline-secondary btn-sm" href="">
+                        Скачать билет</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Почему деревья не ходят</td>
+                    <td>29.10.2020</td>
+                    <td>40</td>
+                    <td>Место в зале</td>
+                    <td>7</td>
+                    <td>10</td>
+                    <td>500</td>
+                    <td>
+                        <a class="btn btn-outline-secondary btn-sm" href="">
+                        Скачать билет</a>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+</main>
+{% endblock %}

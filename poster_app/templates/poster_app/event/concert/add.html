@@ -41,6 +41,20 @@
           <input type="time" class="form-control" name="time_begin" min="08:00" max="24:00" required>
           <br>
 
+          <label>Тип билета</label>
+          <br>
+          <select class="form-control" name="tickets-type" id="tickets-type"
+                  onchange="changeTickets()">
+                <option>Входной</option>
+                <option>Место в зале</option>
+          </select>
+          <br>
+
+          <label id="label-number-of-tickets">Количество билетов</label>
+          <br>
+          <input type="text" required class="form-control" name="number-of-tickets" id="number-of-tickets">
+          <br>
+
           <label>Стоимость билета</label>
           <br>
 
