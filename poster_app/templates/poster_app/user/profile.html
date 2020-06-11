@@ -7,7 +7,28 @@
         <h1>Мой профиль</h1>
     </div>
   </section>
-<div class="table-responsive">
+<div class="row">
+    <div class="col-1"></div>
+    <div class="col-11">
+        <label class="font-weight-bold">Фамилия</label><br>
+        <label>{{ user.surname }}</label>
+        <br><br>
+        <label class="font-weight-bold">Имя</label><br>
+        <label>{{ user.name }}</label>
+        <br><br>
+        <label class="font-weight-bold">E-mail</label><br>
+        <label>{{ user.email }}</label>
+        <br><br>
+        <label class="font-weight-bold">Номер телефона</label><br>
+        <label>{{ user.phone }}</label>
+
+        <form action="{% url  'update_profile' profile_id=user.ID_user_profile %}" method="GET">
+                        {% csrf_token %}
+            <input type="hidden" name="id_profile" value="{{ user.ID_user_profile }}">
+            <br><br>
+            <input type="submit" class="btn btn-outline-info mb-2   pr-4" value="Редактировать">
+        </form>
+    </div>
 
     </div>
 </main>

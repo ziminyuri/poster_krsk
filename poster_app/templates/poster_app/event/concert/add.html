@@ -43,16 +43,13 @@
 
           <label>Тип билета</label>
           <br>
-          <select class="form-control" name="tickets-type" id="tickets-type"
-                  onchange="changeTickets()">
-                <option>Входной</option>
-                <option>Место в зале</option>
-          </select>
-          <br>
-
-          <label id="label-number-of-tickets">Количество билетов</label>
-          <br>
-          <input type="text" required class="form-control" name="number-of-tickets" id="number-of-tickets">
+         <select class="form-control" name="ticket_type" id="ticket_type">
+                {% for ticket_type in ticket_types %}
+                    <option selected value= "{{ ticket_type.id_type_ticket }}">
+                        {{ ticket_type.name }}
+                    </option>
+                {% endfor %}
+            </select>
           <br>
 
           <label>Стоимость билета</label>

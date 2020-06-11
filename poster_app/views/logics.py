@@ -1,11 +1,16 @@
 from django.shortcuts import get_object_or_404
-from poster_app.models import UserProfile, EventStatus, Event, TypeEvent, TypeExhibition
+from poster_app.models import UserProfile, EventStatus, Event, TypeEvent, TypeExhibition, Ticket, Setting, Booking,\
+    StatusBooking, TypeTicket
 from poster_app.views.image import image_to_db
 from django.shortcuts import redirect
+
+import datetime
 
 
 def add_event(request, data, type):
     type_event = get_object_or_404(TypeEvent, name=type)
+    id_type_ticket = data['ticket_type']
+    type_ticket = get_object_or_404(TypeTicket, id_type_ticket=id_type_ticket)
     name = data["name"]
     description = data["description"]
     address = data["address"]
@@ -59,7 +64,8 @@ def add_event(request, data, type):
             ID_user_profile=user,
             img=img_path_db,
             isfree=is_free,
-            id_event_status=status
+            id_event_status=status,
+            ID_type_ticket=type_ticket
         )
 
     elif type == 'Конференция':
@@ -76,7 +82,8 @@ def add_event(request, data, type):
             isfree=is_free,
             id_event_status=status,
             data_end=date_end,
-            time_end=time_end
+            time_end=time_end,
+            ID_type_ticket=type_ticket
         )
 
     elif type == 'Выставка':
@@ -95,7 +102,8 @@ def add_event(request, data, type):
                 time_end=time_end,
                 id_type_exhibition=exhibition_type,
                 data_begin=date_begin,
-                data_end=date_end
+                data_end=date_end,
+                ID_type_ticket=type_ticket
             )
 
         else:
@@ -111,7 +119,8 @@ def add_event(request, data, type):
                 isfree=is_free,
                 id_event_status=status,
                 time_end=time_end,
-                id_type_exhibition=exhibition_type
+                id_type_exhibition=exhibition_type,
+                ID_type_ticket=type_ticket
             )
 
 
@@ -255,4 +264,92 @@ def admin_update(request, event_id):
 
             return old_status
     else:
+        return False
+
+
+def add_ticket_place(request, event_id) -> bool:
+    try:
+        booking_place = request.POST["booking_place_input"]
+        places_str = booking_place.split('Выбрано место: Ряд №')[1:]
+        for place in places_str:
+            row = place.split(' Место №')[0]
+            pl = place.split(' Место №')[1]
+            s = Setting.objects.first()
+
+            now = datetime.datetime.now()
+            status_booking = get_object_or_404(StatusBooking, name="Забронировано")
+            user = get_object_or_404(UserProfile, user=request.user)
+            booking = Booking.objects.create(
+                number=s.number_booking,
+                date=now,
+                ID_user_profile=user,
+                id_status_booking=status_booking
+            )
+            Setting.objects.filter(id_setting=s.id_setting).update(
+                number_booking=s.number_booking + 1)
+
+            event = Event.objects.filter(ID_event=event_id).first()
+
+            try:
+                ticket_price = int(event.ticket_price)
+            except:
+                ticket_price = 0
+
+            if ticket_price > 0:
+                isfree = 0
+            else:
+                isfree = 1
+
+            Ticket.objects.create(
+                row=row,
+                place=pl,
+                id_booking=booking,
+                ID_event=event,
+                isfree=isfree,
+                ticket_price=ticket_price,
+                date=event.data_begin
+            )
+        return True
+    except:
+        return False
+
+
+def add_ticket_entrance(request, event_id) -> bool:
+    try:
+        date = request.POST["date_ticket"]
+        s = Setting.objects.first()
+        now = datetime.datetime.now()
+        user = get_object_or_404(UserProfile, user=request.user)
+        status_booking = get_object_or_404(StatusBooking, name="Забронировано")
+        booking = Booking.objects.create(
+            number=s.number_booking,
+            date=now,
+            ID_user_profile=user,
+            id_status_booking=status_booking
+
+        )
+        Setting.objects.filter(id_setting=s.id_setting).update(
+            number_booking=s.number_booking + 1)
+
+        event = Event.objects.filter(ID_event=event_id).first()
+
+        try:
+            ticket_price = int(event.ticket_price)
+        except Exception as e:
+            ticket_price = 0
+
+        if ticket_price > 0:
+            isfree = 0
+        else:
+            isfree = 1
+
+        Ticket.objects.create(
+            id_booking=booking,
+            ID_event=event,
+            isfree=isfree,
+            ticket_price=ticket_price,
+            date=date
+        )
+        return True
+    except Exception as e:
         return False

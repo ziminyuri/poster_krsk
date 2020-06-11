@@ -2,11 +2,14 @@
 {% block content %}
 
 <main role="main">
+    {% if flag_booking == True %}
     <section class="jumbotron text-center">
     <div class="container">
         <h1>Мои бронирования</h1>
     </div>
   </section>
+
+
 
     <div class="table-responsive" id="m_content">
         <table class="table table-striped table-sm ml-2">
@@ -19,40 +22,68 @@
                 <th>Ряд</th>
                 <th>Место</th>
                 <th>Стоимость</th>
-                <th></th>
+                <th>Статус</th>
+                <th>Отменить бронирование</th>
+                <th>Скачать билет</th>
             </tr>
             </thead>
             <tbody>
+            {% for ticket in tickets_list %}
             <tr>
-                    <td>Воскресение на площади</td>
-                    <td>10.09.2020</td>
-                    <td>43</td>
-                    <td>Входной</td>
-                    <td></td>
-                    <td></td>
+                    <td>{{ ticket.ID_event.name }}</td>
+                    <td>{{ ticket.date }}</td>
+                    <td>{{ ticket.id_booking.number }}</td>
+                    <td>{{ ticket.ID_event.ID_type_ticket.name }}</td>
+                    {% if ticket.ID_event.ID_type_ticket.name == 'Входной' %}
+                    <td>-</td>
+                    <td>-</td>
+                    {% else %}
+                    <td>{{ ticket.row }}</td>
+                    <td>{{ ticket.place }}</td>
+                    {% endif %}
+                    {% if ticket.isfree == True %}
                     <td>Бесплатно</td>
-                <td>
-                        <a class="btn btn-outline-secondary btn-sm" href="">
-                        Скачать билет</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Почему деревья не ходят</td>
-                    <td>29.10.2020</td>
-                    <td>40</td>
-                    <td>Место в зале</td>
-                    <td>7</td>
-                    <td>10</td>
-                    <td>500</td>
-                    <td>
-                        <a class="btn btn-outline-secondary btn-sm" href="">
-                        Скачать билет</a>
-                    </td>
-                </tr>
+                    {% else %}
+                 <td>{{ ticket.ticket_price }}</td>
+                {% endif %}
+                <td>{{ ticket.id_booking.id_status_booking.name }}</td>
 
+                {% if ticket.id_booking.id_status_booking.name == 'Забронировано' %}
+                <td>
+                        <form action="{% url  'booking_disable'%}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="id_ticket" value="{{ ticket.id_ticket }}">
+                            <input type="submit" class="btn btn-outline-danger btn-sm" value="Отменить бронирование">
+                        </form>
+                    </td>
+                {% else %}
+            <td></td>
+            {% endif %}
+
+                <td>
+                        <form action="{% url  'download_ticket_pdf'%}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="id_ticket" value="{{ ticket.id_ticket }}">
+                            <input type="submit" class="btn btn-outline-secondary btn-sm" value="Скачать билет">
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>
+{% else %}
+<section class="jumbotron text-center">
+    <div class="container">
+      <h1>Мои бронирования</h1>
+      <p class="lead text-muted">Забронируйте свой первый билет на событие!</p>
+      <p>
+        <a type="button" class="btn btn-outline-info mb-2 ml-2 pl-4 pr-4" href="{% url 'index' %}">Посмотреть события</a>
+      </p>
+    </div>
+  </section>
+
+{% endif %}
 
 </main>
 {% endblock %}

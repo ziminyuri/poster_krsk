@@ -11,32 +11,95 @@
   </section>
 <div class="container" id="m_content">
 <div class="mb-5"><h2>{{ event.name }}</h2></div>
-    {% for number_row in rows %}
+
+    {% if event.ID_type_ticket.name == 'Входной' %}
+
+        <form role="form" action="{% url 'booking' event_id=event.ID_event %}" method="POST" >
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="hidden" name="type_ticket" value="{{ event.ID_type_ticket.name }}">
+            {% if event.id_type_exhibition.name == 'постоянная экспозиция' %}
+                <label class="font-weight-bold">Тип выставки:</label><br>
+              <p class="card-text">{{ event.id_type_exhibition.name }}</p>
+                <br>
+                <label class="font-weight-bold">Выберите дату посещения:</label><br>
+                <input type="date"  class="form-control" required name="date_ticket">
+                {% elif event.id_type_exhibition.name == 'временная экспозиция' %}
+                <label class="font-weight-bold">Тип выставки:</label><br>
+                <label>Временная экспозиция</label><br><br>
+                <label class="font-weight-bold">Дата проведения</label>
+                <p class="card-text">с {{ event.data_begin|date:"d E" }} - по {{ event.data_end|date:"d E" }}</p>
+                <br>
+                <label class="font-weight-bold">Выберите дату посещения:</label><br>
+                <input type="date"  class="form-control" min="{{ event.data_begin }}" max="{{ event.data_end }}"
+                   required name="date_ticket">
+                {% else %}
+                <p class="card-text">{{ event.data_begin }} {{ event.time_begin }}</p>
+                <input type="date"  class="form-control"
+                   required name="date_ticket">
+                {% endif %}
+
+        <br><br>
+        <label class="font-weight-bold">Стоимость билета:</label><br>
+        {% if event.isfree == True %}
+        <label>Бесплатно</label>
+            {% else %}
+        <label>{{ event.ticket_price }}</label>
+            {% endif %}
+        <br>
+        <label class="d-none" id="event-id">{{ event.ID_event }}</label>
+        <br>
+        <button class="btn btn-outline-success mt-3" type="submit">
+                    Забронировать входной билет</button>
+        </div>
+        </form>
+
+
+    {% else %}
+        <div class="mt-3"><label>Дата: {{ event.data_begin }}</label></div>
+        <div class="mt-1 mb-3"><label>Место: {{ event.address }}</label></div>
+
+    {% for number_row in places %}
   <div class="row row-booking mb-1">
 
     <div class="col-2">
-      ряд №{{ number_row }}
+    {% with row=forloop.counter %}
+      ряд №{{ row }}
+
+
+
+
     </div>
-    <div class="col-10"> {% for number_place in places  %}
+    <div class="col-10"> {% for number_place in number_row  %}
+        {% if number_place == '-' %}
+                <div id="place-booking"><button class="btn-booking-already-booked" id="button-booking">{{ number_place }}</button> </div>
+        {% else %}
         <div id="place-booking"><button class="btn-booking" id="button-booking"
-                                        value="Выбрано место: Ряд №{{ number_row }} Место №{{ number_place }}" onclick="chooseTickets(this)">
+                                        value="Выбрано место: Ряд №{{ row }} Место №{{ number_place }}" onclick="chooseTickets(this)">
             {{ number_place }}</button> </div>
+        {% endif %}
+
         {% endfor %}
+    {% endwith %}
     </div>
 
   </div>
     {% endfor %}
+<p class="mt-5">Стоимость билета: {{ event.ticket_price }} рублей</p>
 
 {% if name == None %}
     <div class="row" id="row_booking">
-<p>Для бронирования билета необходима авторизация</p>
-
-        <button type="button" class="btn btn-outline-secondary " >
+<label>Для бронирования билета необходима авторизация</label><br>
+    </div>
+    <div class="row" id="row_booking">
+        <button type="button" class="btn btn-outline-secondary">
                   Войти в личный кабинет</button>
     </div>
-{% endif %}
+
+
 <br><br>
-    <p>Стоимость билета: {{ event.ticket_price }} рублей</p>
+
+    {% else %}
     <p id="booking-choice-price-p"></p>
     <label class="d-none" id="price-ticket">{{ event.ticket_price }}</label>
     <label class="d-none" id="all-price-ticket">0</label>
@@ -44,6 +107,7 @@
 <form role="form" action="{% url 'booking' event_id=event.ID_event %}" method="POST" >
         {% csrf_token %}
     <div class="form-group">
+        <input type="hidden" name="type_ticket" value="{{ event.ID_type_ticket.name }}">
         <label class="d-none" id="event-id">{{ event.ID_event }}</label>
         <input type="hidden" name="booking_place_input" id="booking_place_input">
         <label id="booking_choice_p"></label>
@@ -53,7 +117,10 @@
         </div>
 
 </form>
+    {% endif %}
 
+
+    {% endif %}
 </div>
 
 

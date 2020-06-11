@@ -1,0 +1,36 @@
+{% extends "poster_app/user/base.html" %}
+{% block content %}
+
+<main role="main">
+  <section class="jumbotron text-center">
+    <div class="container">
+        <h1>Редактировать профиль</h1>
+    </div>
+  </section>
+<div class="row">
+    <div class="col-1"></div>
+    <div class="col-10">
+        <form action="{% url  'update_profile' profile_id=user.ID_user_profile%}" method="POST">
+                        {% csrf_token %}
+        <label class="font-weight-bold">Фамилия</label><br>
+        <input required class="form-control" type="text" value="{{ user.surname }}" name="surname">
+        <br><br>
+        <label class="font-weight-bold">Имя</label><br>
+            <input required class="form-control" type="text" value="{{ user.name }}" name="name">
+        <br><br>
+        <label class="font-weight-bold">E-mail</label><br>
+             <input required class="form-control" type="email" value="{{ user.email }}" name="email1">
+        <br><br>
+        <label class="font-weight-bold">Номер телефона</label><br>
+             <input required class="form-control" type="text" value="{{ user.phone }}" name="phone">
+
+            <input type="hidden" name="id_profile" value="{{ user.ID_user_profile }}">
+            <br>
+            <input type="submit" class="btn btn-outline-info mb-2 pl-4 pr-4" value="Сохранить">
+        </form>
+    </div>
+    <div class="col-1"></div>
+
+    </div>
+</main>
+{% endblock %}

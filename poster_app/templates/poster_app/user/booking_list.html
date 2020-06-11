@@ -8,49 +8,47 @@
     </div>
   </section>
 
-    <button type="button" class="btn btn-outline-info mb-2 ml-2 pl-4 pr-4">Скачать список</button>
+    <form action="{% url  'booking_list_download' event_id=event.ID_event%}" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-outline-info mb-2 ml-2 pl-4 pr-4" value="Скачать список">
+                        </form>
 
     <div class="table-responsive" id="m_content">
         <table class="table table-striped table-sm ml-2">
             <thead>
             <tr>
-                <th>ФИО пользователя</th>
+                <th>Фамилия и имя</th>
                 <th>Дата бронирования</th>
                 <th>Номер бронирования</th>
-                <th>Тип билета</th>
+                <th>Статус бронирования</th>
                 <th>Ряд</th>
                 <th>Место</th>
                 <th>Стоимость</th>
             </tr>
             </thead>
             <tbody>
+            {% for ticket in tickets %}
                 <tr>
-                    <td>Иванов Дмитрий Петрович</td>
-                    <td>30.04.2020</td>
-                    <td>12</td>
-                    <td>Место в зале</td>
-                    <td>5</td>
-                    <td>15</td>
-                    <td>1400</td>
+                    <td>{{ ticket.id_booking.ID_user_profile.surname }} {{ ticket.id_booking.ID_user_profile.name }}</td>
+                    <td>{{ ticket.id_booking.date }}</td>
+                    <td>{{ ticket.id_booking.number }}</td>
+                    <td>{{ ticket.id_booking.id_status_booking.name }}</td>
+                    {%  if ticket.ID_event.ID_type_event.name == 'Входной' %}
+                    <td>-</td>
+                    <td>-</td>
+                    {% else %}
+
+                    <td>{{ ticket.row }}</td>
+                    <td>{{ ticket.place }}</td>
+                    {% endif %}
+
+                    {% if ticket.isfree == True %}
+                    <td>Бесплатно</td>
+                    {% else %}
+                    <td>{{ ticket.ID_event.ticket_price }}</td>
+                {% endif %}
                 </tr>
-            <tr>
-                    <td>Близких Игорь Николаевич</td>
-                    <td>05.05.2020</td>
-                    <td>14</td>
-                    <td>Место в зале</td>
-                    <td>6</td>
-                    <td>17</td>
-                    <td>1400</td>
-                </tr>
-            <tr>
-                    <td>Кравченко Михаил Олегович</td>
-                    <td>06.05.2020</td>
-                    <td>17</td>
-                    <td>Место в зале</td>
-                    <td>1</td>
-                    <td>10</td>
-                    <td>1400</td>
-                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>

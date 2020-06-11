@@ -1,4 +1,5 @@
 import json
+import os
 
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -7,10 +8,11 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from poster_app.models import *
-from poster_app.views.logics import update_event, add_event, get_username, is_admin, admin_update
+from poster_app.views.logics import update_event, add_event, get_username, is_admin, admin_update, add_ticket_place,\
+    add_ticket_entrance
 from django.contrib.auth import logout
 
-import datetime
+from fpdf import FPDF
 
 
 def index(request):
@@ -18,11 +20,15 @@ def index(request):
     events = Event.objects.all().filter(id_event_status__name='Опубликовано')
 
     name = get_username(request)
+    try:
+        user = get_object_or_404(UserProfile, user=request.user)
+    except:
+        user=False
     flag_admin = is_admin(request)
 
     return render(
         request, "poster_app/index.html", {"events": events, 'title': title, 'name': name,
-                                           'admin': flag_admin}
+                                           'admin': flag_admin, 'user': user}
     )
 
 
@@ -44,33 +50,53 @@ def index_detail(request, event_id: int):
 
 def booking(request, event_id: int):
     if request.POST:
-        booking_place = request.POST["booking_place_input"]
-        places_str = booking_place.split('Выбрано место: Ряд №')[1:]
-        for place in places_str:
-            row = place.split(' Место №')[0]
-            pl = place.split(' Место №')[1]
-            s = Setting.objects.all()[0]
+        type_ticket = request.POST["type_ticket"]
 
-            now = datetime.datetime.now()
-            user = get_object_or_404(UserProfile, user=request.user)
+        if type_ticket == 'Входной':
+            add_ticket_entrance(request, event_id)
 
-
-
-        return HttpResponse(json.dumps("Бронирование прошло успешно"), content_type="application/json")
+        else:
+            add_ticket_place(request, event_id)
+        return redirect('booking_user')
 
     else:
         name = get_username(request)
+
+
+        rows_label = []
+        for i in range(1, 11):
+            rows_label.append(i)
+
         rows = []
         for i in range(1, 11):
-            rows.append(i)
-
-        places = []
-        for i in range(1, 21):
-            places.append(i)
+            places = []
+            for i in range(1, 21):
+                places.append(i)
+            rows.append(places)
 
         event = get_object_or_404(Event, ID_event=event_id)
 
-        return render(request, "poster_app/booking.html", {'name': name, 'rows': rows, 'places': places, 'event': event})
+        tickets = Ticket.objects.filter(ID_event=event_id).all()
+
+        for ticket in tickets:
+            if ticket.id_booking.id_status_booking.name =='Забронировано' and ticket.ID_event.ID_type_ticket.name=='Место в зале':
+                row = ticket.row
+                place = ticket.place
+
+                rows[row][place] = '-'
+        return render(request, "poster_app/booking.html", {'name': name, 'event': event, 'places':rows})
+
+
+# Отмена бронирования
+def booking_disable(request):
+    if request.POST:
+        id_ticket = request.POST["id_ticket"]
+        ticket = get_object_or_404(Ticket, id_ticket=id_ticket)
+        id_booking = ticket.id_booking.id_booking
+        status = get_object_or_404(StatusBooking, name="Отменено бронирование")
+        Booking.objects.filter(id_booking=id_booking).update(id_status_booking=status)
+
+    return redirect('booking_user')
 
 
 def index_concert(request):
@@ -80,10 +106,14 @@ def index_concert(request):
 
     events = Event.objects.all().filter(id_event_status__name='Опубликовано')
     events = events.filter(ID_type_event__name='Концерт')
+    try:
+        user = get_object_or_404(UserProfile, user=request.user)
+    except:
+        user=False
 
     return render(
         request, "poster_app/index.html", {"events": events, 'title': title, 'name': name,
-                                           'admin': flag_admin}
+                                           'admin': flag_admin, 'user': user}
     )
 
 
@@ -101,9 +131,14 @@ def index_conference(request):
     events = Event.objects.all().filter(id_event_status__name='Опубликовано')
     events = events.filter(ID_type_event__name='Конференция')
 
+    try:
+        user = get_object_or_404(UserProfile, user=request.user)
+    except:
+        user=False
+
     return render(
         request, "poster_app/index.html", {"events": events, 'title': title, 'name': name,
-                                           'admin': flag_admin}
+                                           'admin': flag_admin, 'user': user}
     )
 
 
@@ -121,8 +156,14 @@ def index_exhibition(request):
     events = Event.objects.all().filter(id_event_status__name='Опубликовано')
     events = events.filter(ID_type_event__name='Выставка')
 
+    try:
+        user = get_object_or_404(UserProfile, user=request.user)
+    except:
+        user=False
+
     return render(
-        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name, 'admin': flag_admin}
+        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name, 'admin': flag_admin,
+                                           'user': user}
     )
 
 
@@ -140,8 +181,14 @@ def index_theater(request):
     events = Event.objects.all().filter(id_event_status__name='Опубликовано')
     events = events.filter(ID_type_event__name=title)
 
+    try:
+        user = get_object_or_404(UserProfile, user=request.user)
+    except:
+        user = False
+
     return render(
-        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name, 'admin': flag_admin}
+        request, "poster_app/index.html", {"events": events, 'title': title, 'name': name, 'admin': flag_admin,
+                                           'user': user}
     )
 
 
@@ -248,7 +295,29 @@ def search(request):
 @login_required
 def profile(request):
     name = get_username(request)
-    return render(request, "poster_app/user/profile.html", {'name': name})
+    user = get_object_or_404(UserProfile, user=request.user)
+    return render(request, "poster_app/user/profile.html", {'name': name, 'user': user})
+
+
+@login_required
+def update_profile(request, profile_id: int):
+    if request.POST:
+        name = request.POST['name']
+        surname = request.POST['surname']
+        email = request.POST['email1']
+        phone = request.POST['phone']
+        UserProfile.objects.filter(ID_user_profile=profile_id).update(
+            name=name,
+            surname=surname,
+            email=email,
+            phone=phone
+        )
+
+        return redirect('profile')
+
+    name = get_username(request)
+    user = get_object_or_404(UserProfile, user=request.user)
+    return render(request, "poster_app/user/update_profile.html", {'name': name, 'user': user})
 
 
 @login_required
@@ -344,14 +413,148 @@ def event_detail(request, event_id: int):
 @login_required
 def booking_user(request):
     name = get_username(request)
-    return render(request, "poster_app/user/my_booking.html", {'name': name})
+    user = get_object_or_404(UserProfile, user=request.user)
+    b = Booking.objects.all()
+    booking_list = Booking.objects.filter(ID_user_profile=user.ID_user_profile).all()
+    tickets_list = []
+    for booking in booking_list:
+        tickets = Ticket.objects.filter(id_booking=booking.id_booking).all()
+        for ticket in tickets:
+            tickets_list.append(ticket)
+
+    if tickets_list:
+        flag_booking = True
+    else:
+        flag_booking = False
+
+    return render(request, "poster_app/user/my_booking.html", {'name': name, 'tickets_list': tickets_list,
+                                                               'flag_booking': flag_booking})
+
+
+@login_required
+def download_ticket_pdf(request):
+    if request.method == 'POST':
+        id_ticket = request.POST['id_ticket']
+        ticket = get_object_or_404(Ticket, id_ticket=id_ticket)
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.add_font('DejaVu', '', 'poster_app/static/poster_app/font/DejaVuSans.ttf', uni=True)
+        pdf.set_font('DejaVu', '', 14)
+        pdf.cell(200, 10, txt="Билет", ln=1, align="C")
+        pdf.cell(0, 5, '', ln=2)
+        pdf.set_font('DejaVu', '', 12)
+        name = ticket.ID_event.name
+        pdf.cell(0, 5, 'Событие: ' + name, ln=1)
+        pdf.cell(0, 5, '', ln=3)
+        pdf.cell(0, 5, '', ln=3)
+
+        pdf.cell(0, 5, 'Номер бронирования: ' + str(ticket.id_booking.number), ln=1)
+        pdf.cell(0, 5, '', ln=2)
+        pdf.cell(0, 5, 'Дата бронирования: ' + str(ticket.id_booking.date), ln=1)
+        pdf.cell(0, 5, '', ln=3)
+        pdf.cell(0, 5, '', ln=3)
+        pdf.cell(0, 5, '', ln=2)
+        pdf.cell(0, 5, 'Дата события: ' + str(ticket.date), ln=1)
+        pdf.cell(0, 5, '', ln=3)
+
+        if ticket.ID_event.ID_type_ticket.name == "Входной":
+            pdf.cell(0, 5, 'Тип билета: ' + ticket.ID_event.ID_type_ticket.name, ln=1)
+            pdf.cell(0, 5, '', ln=2)
+        else:
+            pdf.cell(0, 5, 'Ряд: ' + str(ticket.row), ln=1)
+            pdf.cell(0, 5, '', ln=2)
+            pdf.cell(0, 5, 'Место: ' + str(ticket.place), ln=1)
+            pdf.cell(0, 5, '', ln=2)
+
+        pdf.cell(0, 5, 'Адрес: ' + ticket.ID_event.address, ln=1)
+        pdf.cell(0, 5, '', ln=2)
+
+        if ticket.isfree == True:
+            pdf.cell(0, 5, 'Стоимость: бесплатно', ln=1)
+            pdf.cell(0, 5, '', ln=2)
+
+        else:
+            pdf.cell(0, 5, 'Стоимость: ' + ticket.ID_event.ticket_price + 'р', ln=1)
+            pdf.cell(0, 5, '', ln=2)
+
+        file_name = 'ticket.pdf'
+        path_to_save_file = 'poster_app/static/poster_app/docs/ticket.pdf'
+        pdf.output(path_to_save_file)
+        data = open(path_to_save_file, "rb").read()
+        response = HttpResponse(data, content_type='application;')
+        response['Content-Length'] = os.path.getsize(path_to_save_file)
+        response['Content-Disposition'] = 'attachment; filename=%s' % file_name
+
+        return response
 
 
 @login_required
 def booking_list(request, event_id: int):
     name = get_username(request)
-    return render(request, "poster_app/user/booking_list.html", {'name': name})
+    event = get_object_or_404(Event, ID_event=event_id)
+    tickets = Ticket.objects.filter(ID_event=event).all()
 
+    return render(request, "poster_app/user/booking_list.html", {'name': name, 'tickets': tickets, 'event': event})
+
+
+@login_required
+def booking_list_download(request, event_id: int):
+    if request.method == 'POST':
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.add_font('DejaVu', '', 'poster_app/static/poster_app/font/DejaVuSans.ttf', uni=True)
+        pdf.set_font('DejaVu', '', 14)
+        pdf.cell(200, 10, txt="Список бронировния", ln=1, align="C")
+        pdf.cell(0, 5, '', ln=2)
+        event = get_object_or_404(Event, ID_event=event_id)
+        pdf.cell(0, 5, 'Событие: ' + event.name, ln=1)
+        pdf.cell(0, 5, '', ln=3)
+        if event.isfree == True:
+            pdf.cell(0, 5, 'Стоимость: бесплатно', ln=1)
+        else:
+            pdf.cell(0, 5, 'Стоимость: ' + event.ticket_price, ln=1)
+
+        pdf.cell(0, 5, '', ln=3)
+
+        row_height = pdf.font_size
+        spacing = 2
+
+        pdf.set_font('DejaVu', '', 9)
+        pdf.cell(50, row_height * spacing, txt='Фамилия и имя', border=1)
+        pdf.cell(37, row_height * spacing, txt='Номер бронирования', border=1)
+        pdf.cell(40, row_height * spacing, txt='Дата бронирования', border=1)
+        pdf.cell(10, row_height * spacing, txt='Ряд', border=1)
+        pdf.cell(15, row_height * spacing, txt='Место', border=1)
+        pdf.cell(45, row_height * spacing, txt='Статус бронировния', border=1)
+        pdf.ln(row_height * spacing)
+
+        tickets = Ticket.objects.filter(ID_event=event).all()
+
+        pdf.set_font('DejaVu', '', 9)
+        for ticket in tickets:
+            pdf.cell(50, row_height * spacing,
+                     txt=ticket.id_booking.ID_user_profile.surname + ' ' + ticket.id_booking.ID_user_profile.name,
+                     border=1)
+            pdf.cell(37, row_height * spacing, txt=str(ticket.id_booking.number), border=1)
+            pdf.cell(40, row_height * spacing, txt=str(ticket.id_booking.date), border=1)
+            if ticket.ID_event.ID_type_ticket.name == "Входной":
+                pdf.cell(10, row_height * spacing, txt='-', border=1)
+                pdf.cell(15, row_height * spacing, txt='-', border=1)
+            else:
+                pdf.cell(10, row_height * spacing, txt=str(ticket.row), border=1)
+                pdf.cell(15, row_height * spacing, txt=str(ticket.place), border=1)
+            pdf.cell(45, row_height * spacing, txt=ticket.id_booking.id_status_booking.name, border=1)
+            pdf.ln(row_height * spacing)
+
+        file_name = 'booking_list.pdf'
+        path_to_save_file = 'poster_app/static/poster_app/docs/booking_list.pdf'
+        pdf.output(path_to_save_file)
+        data = open(path_to_save_file, "rb").read()
+        response = HttpResponse(data, content_type='application;')
+        response['Content-Length'] = os.path.getsize(path_to_save_file)
+        response['Content-Disposition'] = 'attachment; filename=%s' % file_name
+
+        return response
 
 @login_required
 def concert(request):
@@ -363,8 +566,8 @@ def concert(request):
             add_event(request, data, 'Концерт')
 
             return redirect("events")
-
-    return render(request, "poster_app/event/concert/add.html", {'name': name})
+    ticket_types = TypeTicket.objects.all()
+    return render(request, "poster_app/event/concert/add.html", {'name': name, "ticket_types":ticket_types})
 
 
 @login_required
@@ -392,7 +595,8 @@ def conference(request):
             add_event(request, data, 'Конференция')
             return redirect("events")
 
-    return render(request, "poster_app/event/conference/add.html", {'name': name})
+    ticket_types = TypeTicket.objects.all()
+    return render(request, "poster_app/event/conference/add.html", {'name': name, 'ticket_types':ticket_types})
 
 
 @login_required
@@ -422,10 +626,11 @@ def exhibition(request):
             return redirect("events")
 
     exhibition_types = TypeExhibition.objects.all()
+    ticket_types = TypeTicket.objects.all()
     return render(
         request,
         "poster_app/event/exhibition/add.html",
-        {"exhibition_types": exhibition_types, 'name': name},
+        {"exhibition_types": exhibition_types, 'name': name, "ticket_types": ticket_types},
     )
 
 
@@ -454,8 +659,8 @@ def theater(request):
         if data["_method"] == "POST":
             add_event(request, data, 'Театр')
             return redirect("events")
-
-    return render(request, "poster_app/event/theater/add.html", {'name': name})
+    ticket_types = TypeTicket.objects.all()
+    return render(request, "poster_app/event/theater/add.html", {'name': name, "ticket_types": ticket_types})
 
 
 @login_required

@@ -41,6 +41,16 @@
           <br>
           <input type="time" class="form-control" name="time_begin" min="08:00" max="24:00" required>
           <br>
+          <label>Тип билета</label>
+          <br>
+         <select class="form-control" name="ticket_type" id="ticket_type">
+                {% for ticket_type in ticket_types %}
+                    <option selected value= "{{ ticket_type.id_type_ticket }}">
+                        {{ ticket_type.name }}
+                    </option>
+                {% endfor %}
+            </select>
+          <br>
 
           <label>Стоимость билета</label>
           <br>

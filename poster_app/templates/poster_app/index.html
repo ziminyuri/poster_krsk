@@ -35,7 +35,9 @@
                 <div class="btn-group">
                     <a class="btn btn-sm btn-outline-secondary" href="{% url 'index_detail' event_id=event.ID_event  %}">
                         Посмотреть</a>
+                    {% if event.ID_user_profile.ID_user_profile != user.ID_user_profile and admin != True %}
                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'booking' event_id=event.ID_event  %}">Забронировать</a>
+                    {% endif %}
                 </div>
                   {% if event.isfree == True %}
                 <small class="text-muted">бесплатно</small>

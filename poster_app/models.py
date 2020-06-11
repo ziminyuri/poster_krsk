@@ -59,17 +59,40 @@ class EventStatus(models.Model):
         return self.name
 
 
+class StatusBooking(models.Model):
+    id_status_booking = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=30)
+
+    class Meta:
+        db_table = "status_booking"
+
+    def __str__(self):
+        return self.name
+
+
 class Booking(models.Model):
     id_booking = models.AutoField(primary_key=True)
     number = models.IntegerField()
     date = models.DateField()
     ID_user_profile = models.ForeignKey(UserProfile, models.DO_NOTHING)
+    id_status_booking = models.ForeignKey(StatusBooking, models.DO_NOTHING)
 
     class Meta:
         db_table = "booking"
 
     def __str__(self):
-        return self.number
+        return str(self.number)
+
+
+class TypeTicket(models.Model):
+    id_type_ticket = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=30)
+
+    class Meta:
+        db_table = "type_ticket"
+
+    def __str__(self):
+        return self.name
 
 
 class Event(models.Model):
@@ -84,10 +107,9 @@ class Event(models.Model):
     time_end = models.TimeField(null=True, blank=True)
     isfree = models.BooleanField(default=True)
     ticket_price = models.CharField(max_length=15, null=True, blank=True)
-    number_of_tickets = models.IntegerField(null=True, blank=True)
-    number_of_tickets_booked = models.IntegerField(null=True, blank=True)
     ID_type_event = models.ForeignKey(TypeEvent, models.DO_NOTHING)
     ID_user_profile = models.ForeignKey(UserProfile, models.DO_NOTHING)
+    ID_type_ticket = models.ForeignKey(TypeTicket, models.DO_NOTHING)
 
     user_name: str = str(ID_user_profile.name)
     img = models.ImageField(upload_to=(user_name + "events"), default=settings.MEDIA_URL + "defualt.jpg")
@@ -105,10 +127,8 @@ class Ticket(models.Model):
     id_ticket = models.AutoField(primary_key=True)
     row = models.IntegerField(null=True, blank=True)
     place = models.IntegerField(null=True, blank=True)
-    entrance = models.BooleanField(default=True)
     ticket_price = models.CharField(max_length=15, null=True, blank=True)
     isfree = models.BooleanField(default=True)
-    name = models.CharField(max_length=20)
     date = models.DateField()
     ID_event = models.ForeignKey(Event, models.DO_NOTHING)
     id_booking = models.ForeignKey(Booking, models.DO_NOTHING)
@@ -117,4 +137,4 @@ class Ticket(models.Model):
         db_table = "ticket"
 
     def __str__(self):
-        return self.name
+        return str(self.id_ticket)

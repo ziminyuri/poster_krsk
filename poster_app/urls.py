@@ -23,10 +23,14 @@ urlpatterns = [
     path("registration", views.registration, name="registration"),
 
     path("profile", views.profile, name="profile"),
+    path("profile/update/<int:profile_id>", views.update_profile, name="update_profile"),
     path("events", views.events, name="events"),
     path("event/<int:event_id>", views.event_detail, name="event_detail"),
     path("booking/list/<int:event_id>", views.booking_list, name="booking_list"),
+    path("booking/list/download/<int:event_id>", views.booking_list_download, name="booking_list_download"),
     path("booking_user/", views.booking_user, name="booking_user"),
+    path("booking/disable", views.booking_disable, name="booking_disable"),
+    path("ticket/download/", views.download_ticket_pdf, name="download_ticket_pdf"),
 
     path("concert", views.concert, name="concert"),
     path("concert/<int:event_id>", views.concert_update_detail, name="concert_update_detail"),

@@ -13,4 +13,10 @@ Password: red666
 User: petrov1
 Password : petrov
 
+User: ivanov
+Password : ivanov
+
+User: frolov
+Password : frolov
+
 
